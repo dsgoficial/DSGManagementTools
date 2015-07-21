@@ -67,3 +67,6 @@ class Utils:
         
         print 'out=',out
         print 'err=',err
+        
+utils = Utils()
+utils.run()

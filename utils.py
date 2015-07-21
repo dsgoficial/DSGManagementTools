@@ -23,6 +23,7 @@
 
 import subprocess
 import urllib2
+import urllib
 import sys
 
 class Utils:
@@ -30,24 +31,28 @@ class Utils:
         pass
     
     def makeRequest(self):
-        osmUrl = 'http://10.67.198.233/teste.cgi'
-        postFile = {'msg':'FUNCIONA!!!!'}
-        req = urllib2.Request(url=osmUrl, data=postFile, headers={'Content-Type': 'application/xml'})
+        osmUrl = 'http://localhost/cgi-bin/teste.cgi'
+        data = {'msg':'FUNCIONA!!!!'}
+        postFile = urllib.urlencode(data)
+        req = urllib2.Request(url=osmUrl, data=postFile)
         return req
 
     def run(self):
         req = self.makeRequest()
-
+        
         try:
             response = urllib2.urlopen(req)
         except urllib2.URLError, e:
-            self.signals.errorOccurred.emit('Error occurred: '+str(e.args) + '\nReason: '+str(e.reason))
+            print 'Error occurred: '+str(e.args) + '\nReason URL: '+str(e.reason)
             return
         except urllib2.HTTPError, e:
-            self.signals.errorOccurred.emit('Error occurred: '+str(e.code) + '\nReason: '+str(e.msg))
+            print 'Error occurred: '+str(e.code) + '\nReason HTTP: '+str(e.msg)
             return
-        
+
         ret = response.read()
+        while ret:
+            print ret
+            ret = response.read()
 
     def runProcess(self, cmd_list):
         #command samples

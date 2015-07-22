@@ -24,10 +24,11 @@
 import os
 
 from PyQt4 import QtGui, uic
+from PyQt4.QtCore import pyqtSlot, Qt
+from DSGManagementTools.utils import Utils
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'dsg_management_tools_dialog_base.ui'))
-
 
 class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
@@ -39,3 +40,29 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        
+        self.utils = Utils()
+        
+        self.populatePostGISConnectionsCombo()
+        
+    def populatePostGISConnectionsCombo(self):
+        self.serverCombo.clear()
+        self.serverCombo.addItem("Select Database")
+        self.serverCombo.addItems(self.utils.getPostGISConnections())
+
+        self.clientCombo.clear()
+        self.clientCombo.addItem("Select Database")
+        self.clientCombo.addItems(self.utils.getPostGISConnections())
+        
+    @pyqtSlot()
+    def on_button_box_accepted(self):
+        self.getServerParameters()
+        self.getClientParameters()
+        cluster = self.clusterEdit.text()
+        
+        (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())
+        (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())
+        
+        req = self.utils.makeRequest(masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
+        self.utils.run(req)
+        

@@ -1,10 +1,13 @@
 #!/bin/sh
-MASTERDBNAME=slonymaster
-SLAVEDBNAME=slonyslave
-MASTERHOST=localhost
-SLAVEHOST=localhost
-REPLICATIONUSER=postgres
-CLUSTERNAME=first_cluster
+MASTERDBNAME=[masterdbname]
+SLAVEDBNAME=[slavedbname]
+MASTERHOST=[masterhost]
+SLAVEHOST=[slavehost]
+MASTERUSER=[masteruser]
+MASTERPASS=[masterpass]
+SLAVEUSER=[slaveuser]
+SLAVEPASS=[slavepass]
+CLUSTERNAME=[clustername]
 slonik <<_EOF_
 # ----
 # This defines which namespace the replication system uses
@@ -17,8 +20,8 @@ cluster name = $CLUSTERNAME;
 # that connect from the administrators workstation (where
 # slonik is executed).
 # ----
-node 1 admin conninfo = 'dbname=$MASTERDBNAME host=$MASTERHOST user=$REPLICATIONUSER';
-node 2 admin conninfo = 'dbname=$SLAVEDBNAME host=$SLAVEHOST user=$REPLICATIONUSER';
+node 1 admin conninfo = 'dbname=$MASTERDBNAME host=$MASTERHOST user=$MASTERUSER password=$MASTERPASS';
+node 2 admin conninfo = 'dbname=$SLAVEDBNAME host=$SLAVEHOST user=$SLAVEUSER password=$SLAVEPASS';
 
 # ----
 # Node 2 subscribes set 1

@@ -56,8 +56,6 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
     @pyqtSlot()
     def on_button_box_accepted(self):
-        self.getServerParameters()
-        self.getClientParameters()
         cluster = self.clusterEdit.text()
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())

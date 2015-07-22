@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import subprocess
+import os
 # Import modules for CGI handling 
 import cgi, cgitb
 cgitb.enable()
@@ -19,50 +20,65 @@ slaveuser = form.getvalue('SLAVEUSER')
 slavepass = form.getvalue('SLAVEPASS')
 clustername = form.getvalue('CLUSTERNAME')
 
-cmd_list = []
-cmd_list.append('sh slony.sh')
-cmd_list.append('sh slony_subscribe.sh')
-
-slonmastercmd = 'slon %s \"dbname=%s user=%s host=%s password=%s\"' % (clustername, masterdb, masteruser, masterhost, masterpass)
-slonslavecmd = 'slon %s \"dbname=%s user=%s host=%s password=%s\"' % (clustername, slavedb, slaveuser, slavehost, slavepass)
-
-cmd_list.append(slonmastercmd)
-cmd_list.append(slonslavecmd)
-
 def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
     script = open(name, 'r')
     scriptData = script.read()
     script.close()
 
     newData = scriptData.replace('[masterdbname]', masterdb)
-    newData = scriptData.replace('[slavedbname]', slavedb)
-    newData = scriptData.replace('[masterhost]', masterhost)
-    newData = scriptData.replace('[slavehost]', slavehost)
-    newData = scriptData.replace('[masteruser]', masteruser)
-    newData = scriptData.replace('[masterpass]', masterpass)
-    newData = scriptData.replace('[slaveuser]', slaveuser)
-    newData = scriptData.replace('[slavepass]', slavepass)
-    newData = scriptData.replace('[clustername]', cluster)
+    newData = newData.replace('[slavedbname]', slavedb)
+    newData = newData.replace('[masterhost]', masterhost)
+    newData = newData.replace('[slavehost]', slavehost)
+    newData = newData.replace('[masteruser]', masteruser)
+    newData = newData.replace('[masterpass]', masterpass)
+    newData = newData.replace('[slaveuser]', slaveuser)
+    newData = newData.replace('[slavepass]', slavepass)
+    newData = newData.replace('[clustername]', cluster)
     
-    script = open(name, 'w')
+    split = name.split('.')
+    newname = split[0]+'_temp.'+split[1]
+    
+    script = open(newname, 'w')
     script.write(newData)
     script.close()
 
-def runProcess(self, cmd_list):
-    #command samples
-    #cmd_list = ['uname -r', 'uptime']
+def runProcess(args, log):
+    subprocess.Popen(args,
+                    stdout=open(log, 'a'),
+                    stderr=open(log, 'a'),
+                    preexec_fn=os.setpgrp
+                    )
     
-    out = []
-    err = []
-    
-    for cmd in cmd_list:
-        args = cmd.split()
-        proc = subprocess.Popen(args,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
-        (stdoutdata, stderrdata) = proc.communicate()
-        out.append(stdoutdata)
-        err.append(stderrdata)
-    
-    print 'out=',out
-    print 'err=',err
+def runCall(cmd):
+    subprocess.call(cmd, shell=True)
+            
+# Updating scripts
+updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
+updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
+updateScript('slony_drop.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
+
+# Commands
+cmd_list = []
+# cmd_list.append('sh slony_temp.sh')
+# cmd_list.append('sh slony_subscribe_temp.sh')
+
+slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass)
+slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass)
+
+cmd_list.append(slonmastercmd)
+cmd_list.append(slonslavecmd)
+
+# Running processes
+runCall(slonmastercmd)
+runCall(slonslavecmd)
+
+# HTML return
+print "Content-type:text/html\r\n\r\n"
+print "<html>"
+print "<head>"
+print "<title>Slony configuration</title>"
+print "</head>"
+print "<body>"
+print "<h2>Success</h2>"
+print "</body>"
+print "</html>"

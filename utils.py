@@ -51,7 +51,7 @@ class Utils:
         return (database, host, port, user, password)    
     
     def makeRequest(self, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
-        osmUrl = 'http://10.67.198.228/cgi-bin/slony.cgi'
+        osmUrl = 'http://10.67.198.228/cgi-bin/slony.py'
         data = {'MASTERDBNAME':masterdb,
                 'SLAVEDBNAME':slavedb,
                 'MASTERHOST':masterhost,
@@ -98,6 +98,3 @@ class Utils:
         
         print 'out=',out
         print 'err=',err
-        
-utils = Utils()
-utils.run()

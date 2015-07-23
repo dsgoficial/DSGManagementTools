@@ -42,8 +42,10 @@ def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, mas
     script.write(newData)
     script.close()
     
-def runCall(cmd):
-    subprocess.call(cmd, shell=True)
+def runProcess(cmd_list):
+    for cmd in cmd_list:
+        args = cmd.split()
+        subprocess.Popen(args)
             
 # Updating scripts
 updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
@@ -51,16 +53,10 @@ updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, mas
 updateScript('slony_drop.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 
 # Running processes
-runCall('/bin/sh slony_temp.sh >> slony.log')
-runCall('/bin/sh slony_subscribe_temp.sh >> subscribe.log')
+cmd_list = []
+cmd_list.append('sh slony_temp.sh >> slony.log')
+cmd_list.append('sh slony_subscribe_temp.sh >> subscribe.log')
+runProcess(cmd_list)
 
 # HTML return
-print "Content-type:text/html\r\n\r\n"
-print "<html>"
-print "<head>"
-print "<title>Slony configuration</title>"
-print "</head>"
-print "<body>"
-print "<h2>Success</h2>"
-print "</body>"
-print "</html>"
+print "Success!"

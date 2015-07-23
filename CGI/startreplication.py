@@ -31,12 +31,4 @@ runCall(slonmastercmd)
 runCall(slonslavecmd)
 
 # HTML return
-print "Content-type:text/html\r\n\r\n"
-print "<html>"
-print "<head>"
-print "<title>Slony configuration</title>"
-print "</head>"
-print "<body>"
-print "<h2>Success</h2>"
-print "</body>"
-print "</html>"
+print "Success!"

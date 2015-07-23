@@ -65,6 +65,14 @@ class Utils:
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req
 
+    def makeKillRequest(self, script, masterpid, slavepid):
+        serverUrl = 'http://10.67.198.228/cgi-bin/'+script
+        data = {'MASTERPID':masterpid,
+                'SLAVEPID':slavepid}
+        postFile = urllib.urlencode(data)
+        req = urllib2.Request(url=serverUrl, data=postFile)
+        return req
+
     def run(self, req):
         try:
             response = urllib2.urlopen(req)

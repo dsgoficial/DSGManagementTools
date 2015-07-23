@@ -53,6 +53,14 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.clientCombo.clear()
         self.clientCombo.addItem("Select Database")
         self.clientCombo.addItems(self.utils.getPostGISConnections())
+
+        self.serverCombo_2.clear()
+        self.serverCombo_2.addItem("Select Database")
+        self.serverCombo_2.addItems(self.utils.getPostGISConnections())
+
+        self.clientCombo_2.clear()
+        self.clientCombo_2.addItem("Select Database")
+        self.clientCombo_2.addItems(self.utils.getPostGISConnections())
         
     @pyqtSlot(int)
     def on_serverCombo_currentIndexChanged(self, index):
@@ -68,18 +76,21 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
     @pyqtSlot(bool)
     def on_createClusterButton_clicked(self, clicked):
-        self.makeRequestOnServer('configurecluster.py')
-        
-    @pyqtSlot(bool)
-    def on_startReplicationButton_clicked(self, clicked):
-        self.makeRequestOnServer('startreplication.py')
-        
-    def makeRequestOnServer(self, script):
         cluster = self.clusterEdit.text()
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())
         
-        req = self.utils.makeRequest(script, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
+        req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         self.utils.run(req)
         
+    @pyqtSlot(bool)
+    def on_startReplicationButton_clicked(self, clicked):
+        cluster = self.clusterEdit.text()
+        
+        (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_2.currentText())
+        (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo_2.currentText())
+        
+        req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
+        self.utils.run(req)
+                

@@ -51,8 +51,8 @@ updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, mas
 updateScript('slony_drop.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 
 # Running processes
-runCall('/bin/sh slony_temp.sh >> slony.log &')
-runCall('/bin/sh slony_subscribe_temp.sh >> subscribe.log &')
+runCall('/bin/sh slony_temp.sh >> slony.log')
+runCall('/bin/sh slony_subscribe_temp.sh >> subscribe.log')
 
 # HTML return
 print "Content-type:text/html\r\n\r\n"

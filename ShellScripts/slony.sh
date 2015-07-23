@@ -1,13 +1,13 @@
 #!/bin/sh
-MASTERDBNAME=lcmaster
-SLAVEDBNAME=lcslave
-MASTERHOST=localhost
-SLAVEHOST=10.67.198.233
-MASTERUSER=postgres
-MASTERPASS=postgres
-SLAVEUSER=postgres
-SLAVEPASS=postgres
-CLUSTERNAME=lc_cluster
+MASTERDBNAME=[masterdbname]
+SLAVEDBNAME=[slavedbname]
+MASTERHOST=[masterhost]
+SLAVEHOST=[slavehost]
+MASTERUSER=[masteruser]
+MASTERPASS=[masterpass]
+SLAVEUSER=[slaveuser]
+SLAVEPASS=[slavepass]
+CLUSTERNAME=[clustername]
 slonik<<_EOF_
 #--
 # define the namespace the replication system uses in our example it is

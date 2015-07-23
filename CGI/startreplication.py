@@ -31,11 +31,12 @@ runCall(slonmastercmd)
 runCall(slonslavecmd)
 
 # HTML return
+print "Content-type:text/html\r\n\r\n"
 print "<html>"
 print "<head>"
-print "<title>Slony configuration</title>"
+print "<title>Starting replication</title>"
 print "</head>"
 print "<body>"
-print "<h2>Success!</h2>"
+print "<h2>Clustername = %s | Master DB = %s | Slave DB = %s</h2>" % (clustername, masterdb, slavedb)
 print "</body>"
 print "</html>"

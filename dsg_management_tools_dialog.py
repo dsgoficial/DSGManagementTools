@@ -154,8 +154,9 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         masterpid = self.getDaemonPID(clustername, split[0])
         slavepid = self.getDaemonPID(clustername, split[1])
         
-        req = self.utils.makeKillRequest('stopreplication.py', masterpid, slavepid)
-        self.utils.run(req)
+        if masterpid and slavepid:
+            req = self.utils.makeKillRequest('stopreplication.py', masterpid, slavepid)
+            self.utils.run(req)
         
     def getDaemonPID(self, clustername, conn):
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)

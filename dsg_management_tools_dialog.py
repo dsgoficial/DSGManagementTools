@@ -47,8 +47,6 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         self.populatePostGISConnectionsCombo()
         
-        self.db = None
-        
     def populatePostGISConnectionsCombo(self):
         self.serverCombo.clear()
         self.serverCombo.addItem("Select Database")
@@ -74,29 +72,30 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
     def on_serverCombo_3_currentIndexChanged(self, index):
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_3.currentText())
         
-        self.getConnection(slavedb, slavehost, slaveport, slaveuser, slavepass)
+        db = self.getConnection(slavedb, slavehost, slaveport, slaveuser, slavepass)
 
         sql = 'select schema_name from information_schema.schemata'
-        query = QSqlQuery(sql, self.db)
+        query = QSqlQuery(sql, db)
         while query.next():
             schema = str(query.value(0))
             if schema[0] == '_':
                 self.insertClusterItem(self.treeWidget.invisibleRootItem(), schema)
                 
-    def getConnection(self, slavedb, slavehost, slaveport, slaveuser, slavepass):
-        if self.db:
-            self.db.close()
-            self.db = None
+    def getConnection(self, conndb, connhost, connport, connuser, connpass):
+        db = None
         
-        self.db = QSqlDatabase("QPSQL")
-        self.db.setDatabaseName(slavedb)
-        self.db.setHostName(slavehost)
-        self.db.setPort(int(slaveport))
-        self.db.setUserName(slaveuser)
-        self.db.setPassword(slavepass)
+        db = QSqlDatabase("QPSQL")
+        db.setDatabaseName(conndb)
+        db.setHostName(connhost)
+        db.setPort(int(connport))
+        db.setUserName(connuser)
+        db.setPassword(connpass)
         
-        if not self.db.open():
-            print self.db.lastError().text()
+        if not db.open():
+            print db.lastError().text()
+            return None
+            
+        return db
             
     def insertClusterItem(self, parent, text):
         self.treeWidget.clear()
@@ -161,16 +160,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
     def removeCluster(self, clustername, conn):
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)
-        
-        db = QSqlDatabase("QPSQL")
-        db.setDatabaseName(conndb)
-        db.setHostName(connhost)
-        db.setPort(int(connport))
-        db.setUserName(connuser)
-        db.setPassword(connpass)
-        
-        if not db.open():
-            print db.lastError().text()
+
+        db = self.getConnection(conndb, connhost, connport, connuser, connpass)
 
         sql = 'DROP SCHEMA '+clustername+' CASCADE'
         query = QSqlQuery(db)
@@ -190,16 +181,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
     def getDaemonPID(self, clustername, conn):
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)
-        
-        db = QSqlDatabase("QPSQL")
-        db.setDatabaseName(conndb)
-        db.setHostName(connhost)
-        db.setPort(int(connport))
-        db.setUserName(connuser)
-        db.setPassword(connpass)
-        
-        if not db.open():
-            print db.lastError().text()
+
+        db = self.getConnection(conndb, connhost, connport, connuser, connpass)
 
         sql = 'select distinct co_pid from '+clustername+'.sl_components where co_actor = \'local_sync\''
         query = QSqlQuery(sql, db)

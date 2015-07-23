@@ -47,16 +47,34 @@ def runProcess(cmd_list):
         args = cmd.split()
         subprocess.Popen(args)
             
+def runCall(cmd):
+    subprocess.call(cmd, shell=True)
+
 # Updating scripts
 updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 updateScript('slony_drop.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 
-# Running processes
+# Configuring slony and subscribing
 cmd_list = []
 cmd_list.append('sh slony_temp.sh >> slony.log')
 cmd_list.append('sh slony_subscribe_temp.sh >> subscribe.log')
 runProcess(cmd_list)
 
+# Starting the daemons
+slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass)
+slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass)
+
+# Running processes
+runCall(slonmastercmd)
+runCall(slonslavecmd)
+
 # HTML return
-print "Success!"
+print "<html>"
+print "<head>"
+print "<title>Slony configuration</title>"
+print "</head>"
+print "<body>"
+print "<h2>Success!</h2>"
+print "</body>"
+print "</html>"

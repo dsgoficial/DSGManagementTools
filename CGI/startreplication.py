@@ -26,9 +26,16 @@ def runCall(cmd):
 slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass)
 slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass)
 
-# Running processes
+# Starting daemons
 runCall(slonmastercmd)
 runCall(slonslavecmd)
 
 # HTML return
-print "Success!"
+print "<html>"
+print "<head>"
+print "<title>Slony configuration</title>"
+print "</head>"
+print "<body>"
+print "<h2>Success!</h2>"
+print "</body>"
+print "</html>"

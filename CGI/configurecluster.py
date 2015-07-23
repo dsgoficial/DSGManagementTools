@@ -41,13 +41,6 @@ def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, mas
     script = open(newname, 'w')
     script.write(newData)
     script.close()
-
-def runProcess(args, log):
-    subprocess.Popen(args,
-                    stdout=open(log, 'a'),
-                    stderr=open(log, 'a'),
-                    preexec_fn=os.setpgrp
-                    )
     
 def runCall(cmd):
     subprocess.call(cmd, shell=True)
@@ -57,20 +50,9 @@ updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, m
 updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 updateScript('slony_drop.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 
-# Commands
-cmd_list = []
-# cmd_list.append('sh slony_temp.sh')
-# cmd_list.append('sh slony_subscribe_temp.sh')
-
-slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass)
-slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass)
-
-cmd_list.append(slonmastercmd)
-cmd_list.append(slonslavecmd)
-
 # Running processes
-runCall(slonmastercmd)
-runCall(slonslavecmd)
+runCall('/bin/sh slony_temp.sh >> slony.log &')
+runCall('/bin/sh slony_subscribe_temp.sh >> subscribe.log &')
 
 # HTML return
 print "Content-type:text/html\r\n\r\n"

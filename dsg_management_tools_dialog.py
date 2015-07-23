@@ -54,13 +54,32 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.clientCombo.addItem("Select Database")
         self.clientCombo.addItems(self.utils.getPostGISConnections())
         
-    @pyqtSlot()
-    def on_button_box_accepted(self):
+    @pyqtSlot(int)
+    def on_serverCombo_currentIndexChanged(self, index):
+        slavedb = self.serverCombo.currentText()
+        masterdb = self.clientCombo.currentText()
+        self.clusterEdit.setText(masterdb+'2'+slavedb)
+
+    @pyqtSlot(int)
+    def on_clientCombo_currentIndexChanged(self, index):
+        slavedb = self.serverCombo.currentText()
+        masterdb = self.clientCombo.currentText()
+        self.clusterEdit.setText(masterdb+'2'+slavedb)
+        
+    @pyqtSlot(bool)
+    def on_createClusterButton_clicked(self, clicked):
+        self.makeRequestOnServer('configurecluster.py')
+        
+    @pyqtSlot(bool)
+    def on_startReplicationButton_clicked(self, clicked):
+        self.makeRequestOnServer('startreplication.py')
+        
+    def makeRequestOnServer(self, script):
         cluster = self.clusterEdit.text()
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())
         
-        req = self.utils.makeRequest(masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
+        req = self.utils.makeRequest(script, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         self.utils.run(req)
         

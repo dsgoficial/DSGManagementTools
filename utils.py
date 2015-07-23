@@ -50,8 +50,8 @@ class Utils:
         settings.endGroup()
         return (database, host, port, user, password)    
     
-    def makeRequest(self, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
-        osmUrl = 'http://10.67.198.228/cgi-bin/slony.py'
+    def makeRequest(self, script, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
+        serverUrl = 'http://10.67.198.228/cgi-bin/'+script
         data = {'MASTERDBNAME':masterdb,
                 'SLAVEDBNAME':slavedb,
                 'MASTERHOST':masterhost,
@@ -62,7 +62,7 @@ class Utils:
                 'SLAVEPASS':slavepass,
                 'CLUSTERNAME':cluster}
         postFile = urllib.urlencode(data)
-        req = urllib2.Request(url=osmUrl, data=postFile)
+        req = urllib2.Request(url=serverUrl, data=postFile)
         return req
 
     def run(self, req):

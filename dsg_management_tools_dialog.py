@@ -71,12 +71,6 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.serverCombo_3.addItems(self.utils.getPostGISConnections())
 
     @pyqtSlot(int)
-    def on_serverCombo_currentIndexChanged(self, index):
-        slavedb = self.serverCombo.currentText()
-        masterdb = self.clientCombo.currentText()
-        self.clusterEdit.setText(masterdb+'2'+slavedb)
-
-    @pyqtSlot(int)
     def on_serverCombo_3_currentIndexChanged(self, index):
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_3.currentText())
         
@@ -112,6 +106,12 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         item.setText(0,text)
 
     @pyqtSlot(int)
+    def on_serverCombo_currentIndexChanged(self, index):
+        slavedb = self.serverCombo.currentText()
+        masterdb = self.clientCombo.currentText()
+        self.clusterEdit.setText(masterdb+'2'+slavedb)
+
+    @pyqtSlot(int)
     def on_clientCombo_currentIndexChanged(self, index):
         slavedb = self.serverCombo.currentText()
         masterdb = self.clientCombo.currentText()
@@ -129,7 +129,9 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
     @pyqtSlot(bool)
     def on_startReplicationButton_clicked(self):
-        cluster = self.clusterEdit.text()
+        slavedb = self.serverCombo_2.currentText()
+        masterdb = self.clientCombo_2.currentText()
+        cluster = masterdb+'2'+slavedb
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_2.currentText())
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo_2.currentText())
@@ -155,8 +157,9 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         slavepid = self.getDaemonPID(clustername, split[1])
         
         if masterpid and slavepid:
-            req = self.utils.makeKillRequest('stopreplication.py', masterpid, slavepid)
-            self.utils.run(req)
+            print masterpid, slavepid
+#             req = self.utils.makeKillRequest('stopreplication.py', masterpid, slavepid)
+#             self.utils.run(req)
         
     def getDaemonPID(self, clustername, conn):
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)

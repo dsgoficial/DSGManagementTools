@@ -147,7 +147,34 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
             return
 
         item = self.treeWidget.selectedItems()[0]
+        
         self.checkAndKillSlonDaemons(item.text(0))
+        
+        self.removeClusters(item.text(0))
+        
+    def removeClusters(self, clustername):
+        cluster = clustername[1::]
+        split = cluster.split('2')
+        
+        self.removeCluster(clustername, split[0])
+        self.removeCluster(clustername, split[1])        
+        
+    def removeCluster(self, clustername, conn):
+        (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)
+        
+        db = QSqlDatabase("QPSQL")
+        db.setDatabaseName(conndb)
+        db.setHostName(connhost)
+        db.setPort(int(connport))
+        db.setUserName(connuser)
+        db.setPassword(connpass)
+        
+        if not db.open():
+            print db.lastError().text()
+
+        sql = 'DROP SCHEMA '+clustername+' CASCADE'
+        query = QSqlQuery(db)
+        query.exec_(sql)        
     
     def checkAndKillSlonDaemons(self, clustername):
         cluster = clustername[1::]
@@ -158,8 +185,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         if masterpid and slavepid:
             print masterpid, slavepid
-#             req = self.utils.makeKillRequest('stopreplication.py', masterpid, slavepid)
-#             self.utils.run(req)
+            req = self.utils.makeKillRequest('stopreplication.py', masterpid, slavepid)
+            self.utils.run(req)
         
     def getDaemonPID(self, clustername, conn):
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)

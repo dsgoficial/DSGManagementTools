@@ -48,6 +48,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.populatePostGISConnectionsCombo()
         
     def populatePostGISConnectionsCombo(self):
+        """
+        Populate all the combo boxes with PostGIS connections
+        """
+
         self.serverCombo.clear()
         self.serverCombo.addItem("Select Database")
         self.serverCombo.addItems(self.utils.getPostGISConnections())
@@ -67,21 +71,55 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.serverCombo_3.clear()
         self.serverCombo_3.addItem("Select Database")
         self.serverCombo_3.addItems(self.utils.getPostGISConnections())
-
-    @pyqtSlot(int)
-    def on_serverCombo_3_currentIndexChanged(self, index):
-        (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_3.currentText())
         
-        db = self.getConnection(slavedb, slavehost, slaveport, slaveuser, slavepass)
+        self.serverCombo_4.clear()
+        self.serverCombo_4.addItem("Select Database")
+        self.serverCombo_4.addItems(self.utils.getPostGISConnections())
+        
+    def queryClusterNames(self, connectionParameters):
+        """
+        Get clusters names for a PostGIS Connection
+        """
+        clusternames = []
+
+        (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(connectionParameters)
+
+        db = self.getConnection(conndb, connhost, connport, connuser, connpass)
 
         sql = 'select schema_name from information_schema.schemata'
         query = QSqlQuery(sql, db)
         while query.next():
             schema = str(query.value(0))
             if schema[0] == '_':
-                self.insertClusterItem(self.treeWidget.invisibleRootItem(), schema)
+                clusternames.append(schema)
+                
+        return clusternames
+
+    @pyqtSlot(int)
+    def on_serverCombo_3_currentIndexChanged(self, index):
+        """
+        Populate the clusters tree widget
+        """
+        
+        clusternames = self.queryClusterNames(self.serverCombo_3.currentText())
+        for clustername in clusternames:
+            self.insertClusterItem(self.treeWidget, clustername)
+                
+    @pyqtSlot(int)
+    def on_serverCombo_4_currentIndexChanged(self, index):
+        """
+        Populate the clusters tree widget
+        """
+        
+        clusternames = self.queryClusterNames(self.serverCombo_4.currentText())
+        for clustername in clusternames:
+            self.insertClusterItem(self.treeWidget_2, clustername)
                 
     def getConnection(self, conndb, connhost, connport, connuser, connpass):
+        """
+        Get a QSqlDatabase for a specific set of connection parameters
+        """
+
         db = None
         
         db = QSqlDatabase("QPSQL")
@@ -97,8 +135,12 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
             
         return db
             
-    def insertClusterItem(self, parent, text):
-        self.treeWidget.clear()
+    def insertClusterItem(self, tree, text):
+        """
+        Creates an item for the tree widget for a specific parent item and a specific text (cluster name)
+        """
+        parent = tree.invisibleRootItem()
+        tree.clear()
         
         item = QTreeWidgetItem(parent)
         item.setExpanded(True)
@@ -106,18 +148,30 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
 
     @pyqtSlot(int)
     def on_serverCombo_currentIndexChanged(self, index):
+        """
+        Sets the cluster name on the fly
+        """
+
         slavedb = self.serverCombo.currentText()
         masterdb = self.clientCombo.currentText()
         self.clusterEdit.setText(masterdb+'2'+slavedb)
 
     @pyqtSlot(int)
     def on_clientCombo_currentIndexChanged(self, index):
+        """
+        Sets the cluster name on the fly
+        """
+
         slavedb = self.serverCombo.currentText()
         masterdb = self.clientCombo.currentText()
         self.clusterEdit.setText(masterdb+'2'+slavedb)
         
     @pyqtSlot(bool)
     def on_createClusterButton_clicked(self):
+        """
+        Creates a cluster, subscribes master and slave and starts the daemons to begin replication 
+        """
+
         cluster = self.clusterEdit.text()
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())
@@ -128,6 +182,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
     @pyqtSlot(bool)
     def on_startReplicationButton_clicked(self):
+        """
+        Starts daemons for the selected master and slave databases
+        """
+
         slavedb = self.serverCombo_2.currentText()
         masterdb = self.clientCombo_2.currentText()
         cluster = masterdb+'2'+slavedb
@@ -140,6 +198,11 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
 
     @pyqtSlot(bool)
     def on_removeClusterButton_clicked(self):
+        """
+        Removes a selected cluster.
+        Before the actual removal a check for running daemons is made.
+        """
+
         #case no item is selected we should warn the user
         if len(self.treeWidget.selectedItems()) == 0:
             QMessageBox.warning(self, self.tr("Warning!"), self.tr("Please, select a cluster to be removed."))
@@ -152,6 +215,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.removeClusters(item.text(0))
         
     def removeClusters(self, clustername):
+        """
+        Remove cluster from master and slave databases
+        """
+
         cluster = clustername[1::]
         split = cluster.split('2')
         
@@ -159,15 +226,25 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.removeCluster(clustername, split[1])        
         
     def removeCluster(self, clustername, conn):
+        """
+        Removes a cluster
+        """
+
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)
 
+        #Gets the connection
         db = self.getConnection(conndb, connhost, connport, connuser, connpass)
 
+        #Drop schema query
         sql = 'DROP SCHEMA '+clustername+' CASCADE'
         query = QSqlQuery(db)
         query.exec_(sql)        
     
     def checkAndKillSlonDaemons(self, clustername):
+        """
+        Check for active slon daemons and kill them
+        """
+
         cluster = clustername[1::]
         split = cluster.split('2')
         
@@ -180,6 +257,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
             self.utils.run(req)
         
     def getDaemonPID(self, clustername, conn):
+        """
+        Gets slon daemon PID for a given cluster and database
+        """
+
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)
 
         db = self.getConnection(conndb, connhost, connport, connuser, connpass)

@@ -26,12 +26,12 @@
 #Add iso code for any locales you want to support here (space separated)
 # default is no locales
 # LOCALES = af
-LOCALES =
+LOCALES = pt
 
 # If locales are enabled, set the name of the lrelease binary on your system. If
 # you have trouble compiling the translations, you may have to specify the full path to
 # lrelease
-#LRELEASE = lrelease
+LRELEASE = lrelease
 #LRELEASE = lrelease-qt4
 
 
@@ -39,18 +39,20 @@ LOCALES =
 SOURCES = \
 	__init__.py \
 	dsg_management_tools.py \
-	dsg_management_tools_dialog.py
+	dsg_management_tools_dialog.py \
+	utils.py
 
 PLUGINNAME = DsgManagementTools
 
 PY_FILES = \
+	__init__.py \
 	dsg_management_tools.py \
 	dsg_management_tools_dialog.py \
-	__init__.py
+	utils.py
 
 UI_FILES = dsg_management_tools_dialog_base.ui
 
-EXTRAS = icon.png metadata.txt
+EXTRAS = slony.png metadata.txt
 
 COMPILED_RESOURCE_FILES = resources_rc.py
 

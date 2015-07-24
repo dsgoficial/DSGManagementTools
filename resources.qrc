@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/plugins/DsgManagementTools" >
-        <file>icon.png</file>
+        <file>slony.png</file>
     </qresource>
 </RCC>

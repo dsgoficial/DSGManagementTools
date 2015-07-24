@@ -10,18 +10,26 @@ cgitb.enable()
 form = cgi.FieldStorage()
 
 # Get data from fields
-masterpid = form.getvalue('MASTERPID')
-slavepid = form.getvalue('SLAVEPID')
+clustername = form.getvalue('CLUSTERNAME')
 
 def runCall(cmd):
     subprocess.call(cmd, shell=True)
+    
+def killPIDs():
+    listpidscmd = 'ps -aux |grep '+clustername+' | awk \'{print $2}\' >> pids.log'
+    runCall(listpidscmd)
+    
+    pidfile = open('pids.log', 'r')
+    pids = pidfile.readlines()
+    pidfile.close()
+    for pid in pids:
+        cmd = '/bin/kill %s' % (pid)
+        runCall(cmd)
 
-slonmastercmd = '/bin/kill %s' % (masterpid)
-slonslavecmd = '/bin/kill %s' % (slavepid)
+killpids = 'ps -aux |grep '+clustername+' | awk \'{print $2}\' >> pids.log'
 
-# Starting daemons
-runCall(slonmastercmd)
-runCall(slonslavecmd)
+# Killing daemons
+killPIDs()
 
 # HTML return
 print "Content-type:text/html\r\n\r\n"
@@ -30,6 +38,6 @@ print "<head>"
 print "<title>Starting replication</title>"
 print "</head>"
 print "<body>"
-print "<h2>Slon daemon %s and %s killed!</h2>" % (masterpid, slavepid)
+print "<h2>Slon daemons kill for cluster %s</h2>" % (clustername)
 print "</body>"
 print "</html>"

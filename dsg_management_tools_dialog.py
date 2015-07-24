@@ -263,26 +263,5 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         cluster = clustername[1::]
         split = cluster.split('2')
         
-        masterpid = self.getDaemonPID(clustername, split[0])
-        slavepid = self.getDaemonPID(clustername, split[1])
-        
-        if masterpid and slavepid:
-            print masterpid, slavepid
-            req = self.utils.makeKillRequest('stopreplication.py', masterpid, slavepid)
-            self.utils.run(req)
-        
-    def getDaemonPID(self, clustername, conn):
-        """
-        Gets slon daemon PID for a given cluster and database
-        """
-
-        (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)
-
-        db = self.getConnection(conndb, connhost, connport, connuser, connpass)
-
-        sql = 'select distinct co_pid from '+clustername+'.sl_components where co_actor = \'local_sync\''
-        query = QSqlQuery(sql, db)
-        while query.next():
-            pid = str(query.value(0))
-            return pid
-        
+        req = self.utils.makeKillRequest('stopreplication.py', cluster)
+        self.utils.run(req)        

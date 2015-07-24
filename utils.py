@@ -65,10 +65,9 @@ class Utils:
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req
 
-    def makeKillRequest(self, script, masterpid, slavepid):
+    def makeKillRequest(self, script, clustername):
         serverUrl = 'http://10.67.198.228/cgi-bin/'+script
-        data = {'MASTERPID':masterpid,
-                'SLAVEPID':slavepid}
+        data = {'CLUSTERNAME':clustername}
         postFile = urllib.urlencode(data)
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req

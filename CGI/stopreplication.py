@@ -16,7 +16,7 @@ def runCall(cmd):
     subprocess.call(cmd, shell=True)
     
 def killPIDs():
-    listpidscmd = 'ps -aux |grep '+clustername+' | awk \'{print $2}\' >> pids.log'
+    listpidscmd = 'ps -aux |grep '+clustername+' | awk \'{print $2}\' > pids.log'
     runCall(listpidscmd)
     
     pidfile = open('pids.log', 'r')

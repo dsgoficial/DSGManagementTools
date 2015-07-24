@@ -83,16 +83,16 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         clusternames = []
 
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(connectionParameters)
+        if conndb and connhost and connport and connuser and connpass:
+            db = self.getConnection(conndb, connhost, connport, connuser, connpass)
 
-        db = self.getConnection(conndb, connhost, connport, connuser, connpass)
-
-        sql = 'select schema_name from information_schema.schemata'
-        query = QSqlQuery(sql, db)
-        while query.next():
-            schema = str(query.value(0))
-            if schema[0] == '_':
-                clusternames.append(schema)
-                
+            sql = 'select schema_name from information_schema.schemata'
+            query = QSqlQuery(sql, db)
+            while query.next():
+                schema = str(query.value(0))
+                if schema[0] == '_':
+                    clusternames.append(schema)
+                    
         return clusternames
 
     @pyqtSlot(int)
@@ -213,6 +213,21 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.checkAndKillSlonDaemons(item.text(0))
         
         self.removeClusters(item.text(0))
+        
+    @pyqtSlot(bool)
+    def on_stopReplicationButton_clicked(self):
+        """
+        Check for running slon daemons and kill them.
+        """
+
+        #case no item is selected we should warn the user
+        if len(self.treeWidget_2.selectedItems()) == 0:
+            QMessageBox.warning(self, self.tr("Warning!"), self.tr("Please, select a cluster to be removed."))
+            return
+
+        item = self.treeWidget_2.selectedItems()[0]
+        
+        self.checkAndKillSlonDaemons(item.text(0))
         
     def removeClusters(self, clustername):
         """

@@ -32,6 +32,8 @@ from DSGManagementTools.utils import Utils
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'dsg_management_tools_dialog_base.ui'))
 
+separador = '__para__'
+
 class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
@@ -154,7 +156,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
 
         slavedb = self.serverCombo.currentText()
         masterdb = self.clientCombo.currentText()
-        self.clusterEdit.setText(masterdb+'2'+slavedb)
+        self.clusterEdit.setText(masterdb+separador+slavedb)
 
     @pyqtSlot(int)
     def on_clientCombo_currentIndexChanged(self, index):
@@ -164,7 +166,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
 
         slavedb = self.serverCombo.currentText()
         masterdb = self.clientCombo.currentText()
-        self.clusterEdit.setText(masterdb+'2'+slavedb)
+        self.clusterEdit.setText(masterdb+separador+slavedb)
         
     @pyqtSlot(bool)
     def on_createClusterButton_clicked(self):
@@ -188,7 +190,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
 
         slavedb = self.serverCombo_2.currentText()
         masterdb = self.clientCombo_2.currentText()
-        cluster = masterdb+'2'+slavedb
+        cluster = masterdb+separador+slavedb
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_2.currentText())
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo_2.currentText())
@@ -235,7 +237,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
 
         cluster = clustername[1::]
-        split = cluster.split('2')
+        split = cluster.split(separador)
         
         self.removeCluster(clustername, split[0])
         self.removeCluster(clustername, split[1])        
@@ -261,7 +263,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
 
         cluster = clustername[1::]
-        split = cluster.split('2')
+        split = cluster.split(separador)
         
         req = self.utils.makeKillRequest('stopreplication.py', cluster)
         self.utils.run(req)        

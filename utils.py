@@ -71,6 +71,11 @@ class Utils:
         postFile = urllib.urlencode(data)
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req
+    
+    def makeGetRunningDaemonsRequest(self, script):
+        serverUrl = 'http://10.67.198.228/cgi-bin/'+script
+        req = urllib2.Request(url=serverUrl)
+        return req
 
     def run(self, req):
         try:
@@ -82,10 +87,13 @@ class Utils:
             print 'Error occurred: '+str(e.code) + '\nReason HTTP: '+str(e.msg)
             return
 
-        ret = response.read()
-        while ret:
-            print ret
-            ret = response.read()
+        resp = response.read()
+        ret = resp
+        while resp:
+            print resp
+            resp = response.read()
+            resp += resp
+        return ret
 
     def runProcess(self, cmd_list):
         #command samples

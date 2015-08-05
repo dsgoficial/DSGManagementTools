@@ -32,8 +32,10 @@ init cluster ( id=1, comment = 'Master Node');
 # subscribe is a set.  The following commands create one set containing
 # all 4 pgbench tables.  The master or origin of the set is node 1.
 #--
-create set (id=1, origin=1, comment='Replicating cb.adm_area_pub_civil_a');
-set add table (set id=1, origin=1, id=1, fully qualified name = 'cb.adm_area_pub_civil_a', comment='Area Pub Civil');
+create set (id=1, origin=1, comment='Replicating cb');
+set add table (set id=1, origin=1, id=1, fully qualified name = 'cb.*', comment='Esquema CB');
+set add table (set id=1, origin=1, id=1, fully qualified name = 'complexos.*', comment='Esquema Complexos');
+set add table (set id=1, origin=1, id=1, fully qualified name = 'public.*', comment='Esquema Public');
 #--
 # Create the second node (the slave) tell the 2 nodes how to connect to
 # each other and how they should listen for events.

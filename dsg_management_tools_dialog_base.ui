@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>512</width>
-    <height>436</height>
+    <width>603</width>
+    <height>309</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dsg Management Tools</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_4">
-   <item row="2" column="0">
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="0">
     <widget class="QDialogButtonBox" name="button_box">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -24,7 +24,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
@@ -33,15 +33,15 @@
       <attribute name="title">
        <string>Configure Cluster</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
+      <layout class="QGridLayout" name="gridLayout_12">
        <item row="0" column="0">
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Server</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout">
+         <layout class="QGridLayout" name="gridLayout_3">
           <item row="0" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout">
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
             <item>
              <widget class="QLabel" name="label">
               <property name="text">
@@ -58,7 +58,7 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLabel" name="label_7">
            <property name="text">
@@ -83,9 +83,9 @@
          <property name="title">
           <string>Client</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2">
+         <layout class="QGridLayout" name="gridLayout_4">
           <item row="0" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
              <widget class="QLabel" name="label_2">
               <property name="text">
@@ -258,6 +258,29 @@
          <property name="text">
           <string>Stop Replication</string>
          </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_6">
+      <attribute name="title">
+       <string>Running Daemons</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="refreshButton">
+         <property name="text">
+          <string>Refresh Slon Daemons</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QTreeWidget" name="daemonsTreeWidget">
+         <column>
+          <property name="text">
+           <string>Daemons</string>
+          </property>
+         </column>
         </widget>
        </item>
       </layout>

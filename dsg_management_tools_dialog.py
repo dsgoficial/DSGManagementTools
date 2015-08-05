@@ -102,7 +102,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
         Populate the clusters tree widget
         """
-        
+        self.treeWidget.clear()
         clusternames = self.queryClusterNames(self.serverCombo_3.currentText())
         for clustername in clusternames:
             self.insertClusterItem(self.treeWidget, clustername)
@@ -112,7 +112,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
         Populate the clusters tree widget
         """
-        
+        self.treeWidget_2.clear()
         clusternames = self.queryClusterNames(self.serverCombo_4.currentText())
         for clustername in clusternames:
             self.insertClusterItem(self.treeWidget_2, clustername)
@@ -142,8 +142,6 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         Creates an item for the tree widget for a specific parent item and a specific text (cluster name)
         """
         parent = tree.invisibleRootItem()
-        tree.clear()
-        
         item = QTreeWidgetItem(parent)
         item.setExpanded(True)
         item.setText(0,text)
@@ -266,4 +264,27 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         split = cluster.split(separador)
         
         req = self.utils.makeKillRequest('stopreplication.py', cluster)
-        self.utils.run(req)        
+        self.utils.run(req)
+       
+    @pyqtSlot(bool) 
+    def on_refreshButton_clicked(self):
+        """
+        Check running daemons and make a user readable information
+        """
+        
+        req = self.utils.makeGetRunningDaemonsRequest('getrunningdaemons.py')
+        ret = self.utils.run(req)
+        split = ret.strip().split('*')
+        
+        self.daemonsTreeWidget.clear()
+        parent = self.daemonsTreeWidget.invisibleRootItem()
+
+        children = []
+        #checking if the text is already in the tree widget
+        for text in split:
+            if text not in children:
+                item = QTreeWidgetItem(parent)
+                item.setExpanded(True)
+                item.setText(0,text)
+                children.append(text)
+            

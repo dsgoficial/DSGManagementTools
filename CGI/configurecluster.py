@@ -53,11 +53,10 @@ def runCall(cmd):
 # Updating scripts
 updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
-updateScript('slony_drop.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 
 # Configuring slony and subscribing
 cmd_list = []
-cmd_list.append('sh slony_temp.sh > configure.log')
+cmd_list.append('sh slony_temp.sh')
 runProcess(cmd_list)
 
 # Starting the daemons

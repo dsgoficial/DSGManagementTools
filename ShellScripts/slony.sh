@@ -462,13 +462,6 @@ set add table (set id=1, origin=1, id=426, fully qualified name = 'public.aux_ob
 set add table (set id=1, origin=1, id=427, fully qualified name = 'public.aux_objeto_desconhecido_l', comment='Tabela public.aux_objeto_desconhecido_l');
 set add table (set id=1, origin=1, id=428, fully qualified name = 'public.aux_objeto_desconhecido_p', comment='Tabela public.aux_objeto_desconhecido_p');
 set add table (set id=1, origin=1, id=429, fully qualified name = 'public.aux_ponto_p', comment='Tabela public.aux_ponto_p');
-set add table (set id=1, origin=1, id=430, fully qualified name = 'public.complex_schema', comment='Tabela public.complex_schema');
-set add table (set id=1, origin=1, id=431, fully qualified name = 'public.db_metadata', comment='Tabela public.db_metadata');
-set add table (set id=1, origin=1, id=432, fully qualified name = 'public.geography_columns', comment='Tabela public.geography_columns');
-set add table (set id=1, origin=1, id=433, fully qualified name = 'public.geometry_columns', comment='Tabela public.geometry_columns');
-set add table (set id=1, origin=1, id=434, fully qualified name = 'public.raster_columns', comment='Tabela public.raster_columns');
-set add table (set id=1, origin=1, id=435, fully qualified name = 'public.raster_overviews', comment='Tabela public.raster_overviews');
-set add table (set id=1, origin=1, id=436, fully qualified name = 'public.spatial_ref_sys', comment='Tabela public.spatial_ref_sys');
 # Create the second node (the slave) tell the 2 nodes how to connect to
 # each other and how they should listen for events.
 #--

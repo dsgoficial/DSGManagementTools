@@ -57,11 +57,11 @@ updateScript('slony_drop.sh', masterdb, slavedb, masterhost, slavehost, masterus
 
 # Configuring slony and subscribing
 cmd_list = []
-cmd_list.append('sh slony_temp.sh')
+cmd_list.append('sh slony_temp.sh > configure.log')
 runProcess(cmd_list)
 
 # Starting the daemons
-slonsubscribe = '/usr/bin/nohup sh slony_subscribe_temp.sh >> subscribe.log &'
+slonsubscribe = '/usr/bin/nohup sh slony_subscribe_temp.sh > subscribe.log &'
 slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass)
 slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass)
 

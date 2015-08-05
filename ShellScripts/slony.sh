@@ -469,7 +469,6 @@ set add table (set id=1, origin=1, id=433, fully qualified name = 'public.geomet
 set add table (set id=1, origin=1, id=434, fully qualified name = 'public.raster_columns', comment='Tabela public.raster_columns');
 set add table (set id=1, origin=1, id=435, fully qualified name = 'public.raster_overviews', comment='Tabela public.raster_overviews');
 set add table (set id=1, origin=1, id=436, fully qualified name = 'public.spatial_ref_sys', comment='Tabela public.spatial_ref_sys');
-
 # Create the second node (the slave) tell the 2 nodes how to connect to
 # each other and how they should listen for events.
 #--

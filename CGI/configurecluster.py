@@ -2,6 +2,7 @@
 
 import subprocess
 import os
+import time
 # Import modules for CGI handling 
 import cgi, cgitb
 cgitb.enable()
@@ -58,6 +59,9 @@ updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, mas
 cmd_list = []
 cmd_list.append('sh slony_temp.sh')
 runProcess(cmd_list)
+
+# Making a delay to test
+time.sleep(10)
 
 # Starting the daemons
 slonsubscribe = '/usr/bin/nohup sh slony_subscribe_temp.sh > subscribe.log &'

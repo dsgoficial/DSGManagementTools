@@ -60,19 +60,6 @@ cmd_list = []
 cmd_list.append('sh slony_temp.sh')
 runProcess(cmd_list)
 
-# Making a delay to test
-time.sleep(10)
-
-# Starting the daemons
-slonsubscribe = '/usr/bin/nohup sh slony_subscribe_temp.sh > subscribe.log &'
-slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass)
-slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass)
-
-# Running processes
-runCall(slonsubscribe)
-runCall(slonmastercmd)
-runCall(slonslavecmd)
-
 # HTML return
 print "Content-type:text/html\r\n\r\n"
 print "<html>"

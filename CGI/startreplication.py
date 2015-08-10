@@ -20,6 +20,28 @@ slaveuser = form.getvalue('SLAVEUSER')
 slavepass = form.getvalue('SLAVEPASS')
 clustername = form.getvalue('CLUSTERNAME')
 
+def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
+    script = open(name, 'r')
+    scriptData = script.read()
+    script.close()
+
+    newData = scriptData.replace('[masterdbname]', masterdb)
+    newData = newData.replace('[slavedbname]', slavedb)
+    newData = newData.replace('[masterhost]', masterhost)
+    newData = newData.replace('[slavehost]', slavehost)
+    newData = newData.replace('[masteruser]', masteruser)
+    newData = newData.replace('[masterpass]', masterpass)
+    newData = newData.replace('[slaveuser]', slaveuser)
+    newData = newData.replace('[slavepass]', slavepass)
+    newData = newData.replace('[clustername]', cluster)
+    
+    split = name.split('.')
+    newname = split[0]+'_temp.'+split[1]
+    
+    script = open(newname, 'w')
+    script.write(newData)
+    script.close()
+    
 def runCall(cmd):
     subprocess.call(cmd, shell=True)
     
@@ -37,7 +59,11 @@ def storeRunningDaemons():
     slon_restore.close()
     
     runCall('chmod +x dsg_slon.sh')
+    
+# Updating scripts
+updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)    
 
+# Defining commands
 slonsubscribe = '/usr/bin/nohup sh slony_subscribe_temp.sh >> subscribe.log &'
 slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass)
 slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass)

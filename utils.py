@@ -81,11 +81,9 @@ class Utils:
         try:
             response = urllib2.urlopen(req)
         except urllib2.URLError, e:
-            print 'Error occurred: '+str(e.args) + '\nReason URL: '+str(e.reason)
-            return
+            return ('Error occurred: '+str(e.args) + '\nReason URL: '+str(e.reason), False)
         except urllib2.HTTPError, e:
-            print 'Error occurred: '+str(e.code) + '\nReason HTTP: '+str(e.msg)
-            return
+            return ('Error occurred: '+str(e.code) + '\nReason HTTP: '+str(e.msg), False)
 
         resp = response.read()
         ret = resp
@@ -93,7 +91,7 @@ class Utils:
             print resp
             resp = response.read()
             resp += resp
-        return ret
+        return (ret, True)
 
     def runProcess(self, cmd_list):
         #command samples

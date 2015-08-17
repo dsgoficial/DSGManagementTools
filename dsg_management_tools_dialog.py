@@ -178,7 +178,11 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())
         
         req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
-        self.utils.run(req)
+        (ret, success) = self.utils.run(req)
+        if sucess:
+            QMessageBox.information(self, self.tr('Information!'), 'Cluster: '+cluster+self.tr+' '+('Successfully configured!'))
+        else:
+            QMessageBox.warning(self, self.tr('Warning!'), ret)
         
     @pyqtSlot(bool)
     def on_startReplicationButton_clicked(self):
@@ -194,7 +198,11 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo_2.currentText())
         
         req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
-        self.utils.run(req)
+        (ret, success) = self.utils.run(req)
+        if sucess:
+            QMessageBox.information(self, self.tr('Information!'), self.tr('Replication started successfully for cluster:')+' '+cluster)
+        else:
+            QMessageBox.warning(self, self.tr('Warning!'), ret)
 
     @pyqtSlot(bool)
     def on_removeClusterButton_clicked(self):
@@ -222,7 +230,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
 
         #case no item is selected we should warn the user
         if len(self.treeWidget_2.selectedItems()) == 0:
-            QMessageBox.warning(self, self.tr("Warning!"), self.tr("Please, select a cluster to be removed."))
+            QMessageBox.warning(self, self.tr("Warning!"), self.tr('Please, select a cluster to be removed.'))
             return
 
         item = self.treeWidget_2.selectedItems()[0]
@@ -264,7 +272,11 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         split = cluster.split(separador)
         
         req = self.utils.makeKillRequest('stopreplication.py', cluster)
-        self.utils.run(req)
+        (ret, success) = self.utils.run(req)
+        if sucess:
+            QMessageBox.information(self, self.tr('Information!'), self.tr('Replication stopped successfully for cluster:')+' '+cluster)
+        else:
+            QMessageBox.warning(self, self.tr('Warning!'), ret)
        
     @pyqtSlot(bool) 
     def on_refreshButton_clicked(self):
@@ -273,7 +285,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
         
         req = self.utils.makeGetRunningDaemonsRequest('getrunningdaemons.py')
-        ret = self.utils.run(req)
+        (ret, success) = self.utils.run(req)
+        if not sucess:
+            QMessageBox.warning(self, self.tr("Warning!"), self.tr('Error while checking for active replications...'))
+            return
         split = ret.strip().split('*')
         
         self.daemonsTreeWidget.clear()

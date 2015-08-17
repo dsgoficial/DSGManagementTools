@@ -179,7 +179,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
-        if sucess:
+        if success:
             QMessageBox.information(self, self.tr('Information!'), 'Cluster: '+cluster+self.tr+' '+('Successfully configured!'))
         else:
             QMessageBox.warning(self, self.tr('Warning!'), ret)
@@ -199,7 +199,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
-        if sucess:
+        if success:
             QMessageBox.information(self, self.tr('Information!'), self.tr('Replication started successfully for cluster:')+' '+cluster)
         else:
             QMessageBox.warning(self, self.tr('Warning!'), ret)
@@ -273,7 +273,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         req = self.utils.makeKillRequest('stopreplication.py', cluster)
         (ret, success) = self.utils.run(req)
-        if sucess:
+        if success:
             QMessageBox.information(self, self.tr('Information!'), self.tr('Replication stopped successfully for cluster:')+' '+cluster)
         else:
             QMessageBox.warning(self, self.tr('Warning!'), ret)
@@ -286,7 +286,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         req = self.utils.makeGetRunningDaemonsRequest('getrunningdaemons.py')
         (ret, success) = self.utils.run(req)
-        if not sucess:
+        if not success:
             QMessageBox.warning(self, self.tr("Warning!"), self.tr('Error while checking for active replications...'))
             return
         split = ret.strip().split('*')

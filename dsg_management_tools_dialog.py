@@ -182,7 +182,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if success:
             QMessageBox.information(self, self.tr('Information!'), 'Cluster: '+cluster+self.tr+' '+('Successfully configured!'))
         else:
-            QMessageBox.warning(self, self.tr('Warning!'), ret)
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while creating cluster:')+'\n'+ret)
         
     @pyqtSlot(bool)
     def on_startReplicationButton_clicked(self):
@@ -202,7 +202,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if success:
             QMessageBox.information(self, self.tr('Information!'), self.tr('Replication started successfully for cluster:')+' '+cluster)
         else:
-            QMessageBox.warning(self, self.tr('Warning!'), ret)
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while starting replication:')+'\n'+ret)
 
     @pyqtSlot(bool)
     def on_removeClusterButton_clicked(self):
@@ -213,7 +213,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
 
         #case no item is selected we should warn the user
         if len(self.treeWidget.selectedItems()) == 0:
-            QMessageBox.warning(self, self.tr("Warning!"), self.tr("Please, select a cluster to be removed."))
+            QMessageBox.warning(self, self.tr("Warning!"), self.tr('Please, select a cluster to be removed.'))
             return
 
         item = self.treeWidget.selectedItems()[0]
@@ -276,7 +276,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if success:
             QMessageBox.information(self, self.tr('Information!'), self.tr('Replication stopped successfully for cluster:')+' '+cluster)
         else:
-            QMessageBox.warning(self, self.tr('Warning!'), ret)
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while stopping replication:')+''\n+ret)
        
     @pyqtSlot(bool) 
     def on_refreshButton_clicked(self):
@@ -287,7 +287,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         req = self.utils.makeGetRunningDaemonsRequest('getrunningdaemons.py')
         (ret, success) = self.utils.run(req)
         if not success:
-            QMessageBox.warning(self, self.tr("Warning!"), self.tr('Error while checking for active replications...'))
+            QMessageBox.warning(self, self.tr("Warning!"), self.tr('Error while checking for active replications:'+'\n'+ret))
             return
         split = ret.strip().split('*')
         

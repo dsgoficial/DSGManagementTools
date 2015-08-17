@@ -55,27 +55,27 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
 
         self.serverCombo.clear()
-        self.serverCombo.addItem("Select Database")
+        self.serverCombo.addItem(self.tr("Select Database"))
         self.serverCombo.addItems(self.utils.getPostGISConnections())
 
         self.clientCombo.clear()
-        self.clientCombo.addItem("Select Database")
+        self.clientCombo.addItem(self.tr("Select Database"))
         self.clientCombo.addItems(self.utils.getPostGISConnections())
 
         self.serverCombo_2.clear()
-        self.serverCombo_2.addItem("Select Database")
+        self.serverCombo_2.addItem(self.tr("Select Database"))
         self.serverCombo_2.addItems(self.utils.getPostGISConnections())
 
         self.clientCombo_2.clear()
-        self.clientCombo_2.addItem("Select Database")
+        self.clientCombo_2.addItem(self.tr("Select Database"))
         self.clientCombo_2.addItems(self.utils.getPostGISConnections())
         
         self.serverCombo_3.clear()
-        self.serverCombo_3.addItem("Select Database")
+        self.serverCombo_3.addItem(self.tr("Select Database"))
         self.serverCombo_3.addItems(self.utils.getPostGISConnections())
         
         self.serverCombo_4.clear()
-        self.serverCombo_4.addItem("Select Database")
+        self.serverCombo_4.addItem(self.tr("Select Database"))
         self.serverCombo_4.addItems(self.utils.getPostGISConnections())
         
     def queryClusterNames(self, connectionParameters):

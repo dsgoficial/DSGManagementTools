@@ -276,7 +276,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if success:
             QMessageBox.information(self, self.tr('Information!'), self.tr('Replication stopped successfully for cluster:')+' '+cluster)
         else:
-            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while stopping replication:')+''\n+ret)
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while stopping replication:')+'\n'+ret)
        
     @pyqtSlot(bool) 
     def on_refreshButton_clicked(self):

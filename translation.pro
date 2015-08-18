@@ -7,7 +7,7 @@
 
  FORMS           =	dsg_management_tools_dialog_base.ui
 
- TRANSLATIONS    = i18n/DSGManagementTools_pt.ts
+ TRANSLATIONS    = i18n/DsgManagementTools_pt.ts
 
 RESOURCES += \
     resources.qrc

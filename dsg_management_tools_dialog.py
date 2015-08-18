@@ -173,6 +173,9 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
 
         cluster = self.clusterEdit.text()
+        if len(cluster) > 30:
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Cluster name too long'))
+            return
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())

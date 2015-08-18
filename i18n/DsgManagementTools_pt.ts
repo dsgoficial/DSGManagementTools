@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="pt_BR" sourcelanguage="en_US">
+<!DOCTYPE TS>
+<TS version="2.0" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>DsgManagementTools</name>
     <message>
@@ -21,42 +22,42 @@
         <translation>Selecione um Banco de Dados</translation>
     </message>
     <message>
-        <location filename="dsg_management_tools_dialog.py" line="290"/>
+        <location filename="dsg_management_tools_dialog.py" line="293"/>
         <source>Warning!</source>
         <translation>Aviso!</translation>
     </message>
     <message>
-        <location filename="dsg_management_tools_dialog.py" line="233"/>
+        <location filename="dsg_management_tools_dialog.py" line="236"/>
         <source>Please, select a cluster to be removed.</source>
         <translation>Por favor, selecione um cluster para ser removido.</translation>
     </message>
     <message>
-        <location filename="dsg_management_tools_dialog.py" line="277"/>
+        <location filename="dsg_management_tools_dialog.py" line="280"/>
         <source>Information!</source>
         <translation>Informação!</translation>
     </message>
     <message>
-        <location filename="dsg_management_tools_dialog.py" line="185"/>
+        <location filename="dsg_management_tools_dialog.py" line="188"/>
         <source>Error while creating cluster:</source>
         <translation>Erro durante criação de cluster:</translation>
     </message>
     <message>
-        <location filename="dsg_management_tools_dialog.py" line="203"/>
+        <location filename="dsg_management_tools_dialog.py" line="206"/>
         <source>Replication started successfully for cluster:</source>
         <translation>Replicação iniciada com sucesso para o cluster:</translation>
     </message>
     <message>
-        <location filename="dsg_management_tools_dialog.py" line="205"/>
+        <location filename="dsg_management_tools_dialog.py" line="208"/>
         <source>Error while starting replication:</source>
         <translation>Erro durante inicialização da replicação:</translation>
     </message>
     <message>
-        <location filename="dsg_management_tools_dialog.py" line="277"/>
+        <location filename="dsg_management_tools_dialog.py" line="280"/>
         <source>Replication stopped successfully for cluster:</source>
         <translation>Replicação parada com sucesso para o cluster:</translation>
     </message>
     <message>
-        <location filename="dsg_management_tools_dialog.py" line="279"/>
+        <location filename="dsg_management_tools_dialog.py" line="282"/>
         <source>Error while stopping replication:</source>
         <translation>Erro durante a parada da replicação:</translation>
     </message>
@@ -64,6 +65,16 @@
         <location filename="dsg_management_tools_dialog.py" line="290"/>
         <source>Error while checking for active replications:
 </source>
+        <translation type="obsolete">Erro durante a conferência de replicações ativas:</translation>
+    </message>
+    <message>
+        <location filename="dsg_management_tools_dialog.py" line="177"/>
+        <source>Cluster name too long</source>
+        <translation>Nome do cluster muito longo</translation>
+    </message>
+    <message>
+        <location filename="dsg_management_tools_dialog.py" line="293"/>
+        <source>Error while checking for active replications:</source>
         <translation>Erro durante a conferência de replicações ativas:</translation>
     </message>
 </context>

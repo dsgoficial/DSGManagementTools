@@ -32,7 +32,7 @@ from DSGManagementTools.utils import Utils
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'dsg_management_tools_dialog_base.ui'))
 
-separador = '__para__'
+separador = '_to_'
 
 class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
@@ -183,7 +183,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
         if success:
-            QMessageBox.information(self, self.tr('Information!'), 'Cluster: '+cluster+self.tr+' '+('Successfully configured!'))
+            QMessageBox.information(self, self.tr('Information!'), 'Cluster: '+cluster+' '+self.tr('Successfully configured!'))
         else:
             QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while creating cluster:')+'\n'+ret)
         

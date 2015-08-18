@@ -5,6 +5,8 @@ import os
 # Import modules for CGI handling 
 import cgi, cgitb
 cgitb.enable()
+
+separador = '_to_'
     
 def getRunningDaemons():
     daemons = open('running_daemons.log', 'r')
@@ -20,7 +22,7 @@ def makeResponse(lines):
     for i in range(len(lines)):
         line = lines[i]
         clustername = line.split(' ')[2]
-        split = clustername.split('__para__')
+        split = clustername.split(separador)
         de = split[0]
         para = split[1]
         response += 'Replicando de '+de+' para '+para

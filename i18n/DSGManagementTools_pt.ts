@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="pt_BR" sourcelanguage="en_US">
+<!DOCTYPE TS><TS version="2.0" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>DsgManagementTools</name>
     <message>
-        <location filename="dsg_management_tools.py" line="174"/>
+        <location filename="dsg_management_tools.py" line="171"/>
         <source>&amp;DsgManagementTools</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="dsg_management_tools.py" line="164"/>
+        <location filename="dsg_management_tools.py" line="161"/>
         <source>DSG Management Tools</source>
         <translation>Ferramentas de Gerenciamento da DSG</translation>
     </message>

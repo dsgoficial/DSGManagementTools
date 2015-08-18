@@ -287,7 +287,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         req = self.utils.makeGetRunningDaemonsRequest('getrunningdaemons.py')
         (ret, success) = self.utils.run(req)
         if not success:
-            QMessageBox.warning(self, self.tr("Warning!"), self.tr('Error while checking for active replications:'+'\n'+ret))
+            QMessageBox.warning(self, self.tr("Warning!"), self.tr('Error while checking for active replications:')+'\n'+ret)
             return
         split = ret.strip().split('*')
         

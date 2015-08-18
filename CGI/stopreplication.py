@@ -16,7 +16,7 @@ def runCall(cmd):
     subprocess.call(cmd, shell=True)
     
 def storeRunningDaemons():
-    listdaemons = 'ps -aux |grep -E \'/usr/bin/slon.*__para__\'|grep -v grep | awk \'{print \"/usr/bin/nohup \"$11\" \"$12\" \"$13\" \"$14\" \"$15\" \"$16\" &\"}\' > running_daemons.log'
+    listdaemons = 'ps -aux |grep -E \'/usr/bin/slon.*_to_\'|grep -v grep | awk \'{print \"/usr/bin/nohup \"$11\" \"$12\" \"$13\" \"$14\" \"$15\" \"$16\" &\"}\' > running_daemons.log'
     runCall(listdaemons)
     
     daemons = open('running_daemons.log', 'r')

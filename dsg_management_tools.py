@@ -58,9 +58,6 @@ class DsgManagementTools:
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
 
-        # Create the dialog (after translation) and keep reference
-        self.dlg = DsgManagementToolsDialog()
-
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&DsgManagementTools')
@@ -181,10 +178,12 @@ class DsgManagementTools:
 
     def run(self):
         """Run method that performs all the real work"""
+        # Create the dialog (after translation) and keep reference
+        dlg = DsgManagementToolsDialog()
         # show the dialog
-        self.dlg.show()
+        dlg.show()
         # Run the dialog event loop
-        result = self.dlg.exec_()
+        result = dlg.exec_()
         # See if OK was pressed
         if result:
             # Do something useful here - delete the line containing pass and

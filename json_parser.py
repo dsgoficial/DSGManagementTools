@@ -27,6 +27,7 @@ class JsonParser():
         self.filename = filename
         self.parsed = dict()
 
+
     def writeCluster(self, clustername, masterconn, masterpid, slaveconn, slavepid):
         self.writeMasterConn(clustername, masterconn)
         self.writeMasterPid(clustername, masterpid)

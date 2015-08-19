@@ -66,7 +66,7 @@ def storeRunningDaemons():
 updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)    
 
 # Defining commands
-slonsubscribe = '/usr/bin/nohup sh slony_subscribe_temp.sh >> %_subscribe.log &' % clustername
+slonsubscribe = '/usr/bin/nohup sh slony_subscribe_temp.sh >> %s_subscribe.log &' % clustername
 slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> %s_master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass, clustername)
 slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> %s_slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass, clustername)
 

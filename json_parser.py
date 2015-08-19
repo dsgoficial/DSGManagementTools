@@ -25,33 +25,36 @@ import json
 class JsonParser():
     def __init__(self, filename):
         self.filename = filename
-        self.parsed = dict()
-
+        try:
+            file = open(self.filename, 'r')
+            data = file.read()
+            self.parsed = json.loads(data)
+        except:
+            self.parsed = dict()
 
     def writeCluster(self, clustername, masterconn, masterpid, slaveconn, slavepid):
-        self.writeMasterConn(clustername, masterconn)
-        self.writeMasterPid(clustername, masterpid)
-        self.writeSlaveConn(clustername, slaveconn)
-        self.writeSlavePid(clustername, slavepid)
+        self.parsed[clustername] = self.getClusterDict(masterconn, masterpid, slaveconn, slavepid)
 
         with open(self.filename, 'w') as outfile:
             json.dump(self.parsed, outfile)
 
-    def writeMasterConn(self, clustername, masterconn):
-        data = dict()
-        data['master'] = 'masterconn'
-        data['master']['masterconn'] = masterconn
-        self.parsed[clustername] = data
+    def getMasterDict(self, masterconn, masterpid):
+        master = dict()
+        master['masterconn'] = masterconn
+        master['masterpid'] = masterpid
+        return master
 
-    def writeMasterPid(self, clustername, masterpid):
-        dict = dict()
-        self.parsed[clustername]['master']['masterpid'] = masterpid
+    def getSlaveDict(self, slaveconn, slavepid):
+        slave = dict()
+        slave['slaveconn'] = slaveconn
+        slave['slavepid'] = slavepid
+        return slave
 
-    def writeSlaveConn(self, clustername, slaveconn):
-        self.parsed[clustername]['slave']['slaveconn'] = slaveconn
-
-    def writeSlavePid(self, clustername, slavepid):
-        self.parsed[clustername]['slave']['slavepid'] = slavepid
+    def getClusterDict(self, masterconn, masterpid, slaveconn, slavepid):
+        cluster = dict()
+        cluster['master'] = self.getMasterDict(masterconn, masterpid)
+        cluster['slave'] = self.getSlaveDict(slaveconn, slavepid)
+        return cluster
 
     def readMasterConn(self, clustername):
         return self.parsed[clustername]['master']['masterconn']
@@ -67,4 +70,4 @@ class JsonParser():
 
 if __name__=='__main__':
     parser = JsonParser('/Users/luiz/Downloads/teste.json')
-    parser.writeCluster('teste', 'master', '2222', 'slave', '3333')
+    parser.writeCluster('oi', 'master', '2222', 'slave', '3333')

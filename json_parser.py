@@ -70,4 +70,4 @@ class JsonParser():
 
 if __name__=='__main__':
     parser = JsonParser('/Users/luiz/Downloads/teste.json')
-    parser.writeCluster('teste', 'master', '2222', 'slave', '3333')
+    parser.writeCluster('cluster', 'master', '2222', 'slave', '3333')

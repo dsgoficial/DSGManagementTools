@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="pt_BR" sourcelanguage="en_US">
+<!DOCTYPE TS><TS version="2.0" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>DsgManagementTools</name>
     <message>
@@ -76,6 +75,11 @@
         <location filename="dsg_management_tools_dialog.py" line="293"/>
         <source>Error while checking for active replications:</source>
         <translation>Erro durante a conferência de replicações ativas:</translation>
+    </message>
+    <message>
+        <location filename="dsg_management_tools_dialog.py" line="186"/>
+        <source>Successfully configured!</source>
+        <translation>Configurado com sucesso!</translation>
     </message>
 </context>
 <context>

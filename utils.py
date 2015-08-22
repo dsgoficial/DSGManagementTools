@@ -51,7 +51,7 @@ class Utils:
         return (database, host, port, user, password)    
     
     def makeRequest(self, script, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
-        serverUrl = 'http://10.67.198.228/cgi-bin/'+script
+        serverUrl = 'http://localhost/cgi-bin/'+script
         data = {'MASTERDBNAME':masterdb,
                 'SLAVEDBNAME':slavedb,
                 'MASTERHOST':masterhost,
@@ -66,14 +66,14 @@ class Utils:
         return req
 
     def makeKillRequest(self, script, clustername):
-        serverUrl = 'http://10.67.198.228/cgi-bin/'+script
+        serverUrl = 'http://localhost/cgi-bin/'+script
         data = {'CLUSTERNAME':clustername}
         postFile = urllib.urlencode(data)
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req
     
     def makeGetRunningDaemonsRequest(self, script):
-        serverUrl = 'http://10.67.198.228/cgi-bin/'+script
+        serverUrl = 'http://localhost/cgi-bin/'+script
         req = urllib2.Request(url=serverUrl)
         return req
 

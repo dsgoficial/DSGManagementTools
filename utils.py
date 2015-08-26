@@ -28,7 +28,7 @@ import sys
 
 from PyQt4.QtCore import *
 
-server = 'http://localhost/cgi-bin/'
+server = 'http://10.67.198.228/cgi-bin/'
 
 class Utils:
     def __init__(self):

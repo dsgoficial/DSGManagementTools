@@ -28,10 +28,47 @@ import sys
 
 from PyQt4.QtCore import *
 
+server = 'http://localhost/cgi-bin/'
+
 class Utils:
     def __init__(self):
         pass
     
+    def setUrllibProxy(self, url):
+        (enabled, host, port, user, password, type, urlsList) = self.getProxyConfiguration()
+        if enabled == 'false' or type != 'HttpProxy':
+            return
+        
+        for address in urlsList:
+            if address in url:
+                proxy = urllib2.ProxyHandler({})
+                opener = urllib2.build_opener(proxy, urllib2.HTTPHandler)
+                urllib2.install_opener(opener)
+                return
+
+        proxyStr = 'http://'+user+':'+password+'@'+host+':'+port
+        proxy = urllib2.ProxyHandler({'http': proxyStr})
+        opener = urllib2.build_opener(proxy, urllib2.HTTPHandler)
+        urllib2.install_opener(opener)
+        return          
+
+    def getProxyConfiguration(self):
+        settings = QSettings()
+        settings.beginGroup('proxy')
+        enabled = settings.value('proxyEnable')
+        host = settings.value('proxyHost')
+        port = settings.value('proxyPort')
+        user = settings.value('proxyUser')
+        password = settings.value('proxyPassword')
+        type = settings.value('proxyType')
+        excludedUrls = settings.value('proxyExcludedUrls')
+        try:
+            urlsList = excludedUrls.split('|')
+        except:
+            urlsList = []
+        settings.endGroup()
+        return (enabled, host, port, user, password, type, urlsList)
+
     def getPostGISConnections(self):
         settings = QSettings()
         settings.beginGroup('PostgreSQL/connections')
@@ -51,7 +88,10 @@ class Utils:
         return (database, host, port, user, password)    
     
     def makeRequest(self, script, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
-        serverUrl = 'http://localhost/cgi-bin/'+script
+        serverUrl = server+script
+        # set proxy
+        self.setUrllibProxy(serverUrl)        
+
         data = {'MASTERDBNAME':masterdb,
                 'SLAVEDBNAME':slavedb,
                 'MASTERHOST':masterhost,
@@ -66,14 +106,20 @@ class Utils:
         return req
 
     def makeKillRequest(self, script, clustername):
-        serverUrl = 'http://localhost/cgi-bin/'+script
+        serverUrl = server+script
+        # set proxy
+        self.setUrllibProxy(serverUrl)        
+
         data = {'CLUSTERNAME':clustername}
         postFile = urllib.urlencode(data)
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req
     
     def makeGetRunningDaemonsRequest(self, script):
-        serverUrl = 'http://localhost/cgi-bin/'+script
+        serverUrl = server+script
+        # set proxy
+        self.setUrllibProxy(serverUrl)        
+
         req = urllib2.Request(url=serverUrl)
         return req
 
@@ -111,3 +157,9 @@ class Utils:
         
         print 'out=',out
         print 'err=',err
+        
+if __name__=='__main__':
+    dsg = Utils()
+    req = dsg.makeGetRunningDaemonsRequest('getrunningdaemons.py')
+    resp = dsg.run(req)                
+            

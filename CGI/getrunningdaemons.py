@@ -7,8 +7,14 @@ import cgi, cgitb
 cgitb.enable()
 
 separador = '_to_'
+
+def runCall(cmd):
+    subprocess.call(cmd, shell=True)    
     
 def getRunningDaemons():
+    listdaemons = 'ps -aux |grep -E \'/usr/bin/slon.*'+separador+'\'|grep -v grep | awk \'{print \"\"$8\" \"$11\" \"$12\" \"$13\" \"$14\" \"$15\" \"$16\"\"}\' > running_daemons.log'
+    runCall(listdaemons)
+    
     daemons = open('running_daemons.log', 'r')
     lines = daemons.readlines()
     daemons.close()

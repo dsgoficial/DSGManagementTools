@@ -62,7 +62,7 @@ def storeRunningDaemons():
                 hostType = 'slave'
             else:
                 hostType = 'master'
-            s = '/usr/bin/nohup '+line[2::].strip('\n')+' >> '+split[2]+'_'+hostType+'.log &\n'
+            s = '/usr/bin/nohup '+split[1]+' '+split[2]+' \"'+split[3]+' '+split[4]+' '+split[5]+' '+split[6].strip('\n')+'\" >> /usr/lib/cgi-bin/'+split[2]+'_'+hostType+'.log &\n'
             newlines.append(s)
                 
     slon_restore = open('dsg_slon.sh', 'wb')
@@ -84,7 +84,7 @@ slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s pass
 runCall(slonsubscribe)
 runCall(slonmastercmd)
 runCall(slonslavecmd)
-time.sleep(2)
+time.sleep(3)
 
 # Updating running slon daemons
 storeRunningDaemons()

@@ -32,7 +32,7 @@ def storeRunningDaemons():
                 hostType = 'slave'
             else:
                 hostType = 'master'
-            s = '/usr/bin/nohup '+line[2::].strip('\n')+' >> '+split[2]+'_'+hostType+'.log &\n'
+            s = '/usr/bin/nohup '+split[1]+' '+split[2]+' \"'+split[3]+' '+split[4]+' '+split[5]+' '+split[6].strip('\n')+'\" >> /usr/lib/cgi-bin/'+split[2]+'_'+hostType+'.log &\n'
             newlines.append(s)
                 
     slon_restore = open('dsg_slon.sh', 'wb')
@@ -57,7 +57,7 @@ killpids = 'ps -aux |grep '+clustername+' | awk \'{print $2}\' >> pids.log'
 
 # Killing daemons
 killPIDs()
-time.sleep(2)
+time.sleep(3)
 
 # Updating running slon daemons
 storeRunningDaemons()

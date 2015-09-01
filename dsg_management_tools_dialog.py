@@ -173,7 +173,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
 
         cluster = self.clusterEdit.text()
-        if len(cluster) > 30:
+        if len(cluster) > 48:
             QMessageBox.warning(self, self.tr('Warning!'), self.tr('Cluster name too long'))
             return
         

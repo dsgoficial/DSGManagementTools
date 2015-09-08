@@ -53,6 +53,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         settings = QSettings()
         settings.beginGroup('Slony/server/')
         host = settings.value('host')
+        if not host:
+            host = '127.0.0.1'
         settings.endGroup()
         
         self.ipLineEdit.setText(host)

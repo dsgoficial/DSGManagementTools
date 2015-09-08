@@ -28,11 +28,9 @@ import sys
 
 from PyQt4.QtCore import *
 
-server = 'http://10.67.198.228/cgi-bin/'
-
 class Utils:
-    def __init__(self):
-        pass
+    def __init__(self, host):
+        self.server = 'http://'+host+'/cgi-bin/'
     
     def setUrllibProxy(self, url):
         (enabled, host, port, user, password, type, urlsList) = self.getProxyConfiguration()
@@ -88,7 +86,7 @@ class Utils:
         return (database, host, port, user, password)    
     
     def makeRequest(self, script, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
-        serverUrl = server+script
+        serverUrl = self.server+script
         # set proxy
         self.setUrllibProxy(serverUrl)        
 
@@ -106,7 +104,7 @@ class Utils:
         return req
 
     def makeKillRequest(self, script, clustername):
-        serverUrl = server+script
+        serverUrl = self.server+script
         # set proxy
         self.setUrllibProxy(serverUrl)        
 
@@ -116,7 +114,7 @@ class Utils:
         return req
     
     def makeGetRunningDaemonsRequest(self, script):
-        serverUrl = server+script
+        serverUrl = self.server+script
         # set proxy
         self.setUrllibProxy(serverUrl)        
 

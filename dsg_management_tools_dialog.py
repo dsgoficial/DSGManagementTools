@@ -23,8 +23,8 @@
 
 import os
 
-from PyQt4 import QtGui, uic
-from PyQt4.QtCore import pyqtSlot, Qt
+from PyQt4 import QtGui, uic, QtCore
+from PyQt4.QtCore import pyqtSlot, Qt, QSettings
 from PyQt4.QtGui import QTreeWidgetItem, QMessageBox
 from PyQt4.QtSql import QSqlDatabase, QSqlQuery
 from DSGManagementTools.utils import Utils
@@ -45,9 +45,30 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         
-        self.utils = Utils()
-        
         self.populatePostGISConnectionsCombo()
+        
+        #Ip validator
+        regex = QtCore.QRegExp("\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
+        self.validator=QtGui.QRegExpValidator(regex, self.ipLineEdit)
+        self.ipLineEdit.setValidator(self.validator)
+        
+        settings = QSettings()
+        settings.beginGroup('Slony/server/')
+        host = settings.value('host')
+        settings.endGroup()
+        
+        self.ipLineEdit.setText(host)
+        #--------------
+        self.utils = Utils(host)
+        
+    @pyqtSlot(bool)
+    def on_saveServerButton_clicked(self):
+        settings = QSettings()
+        settings.beginGroup('Slony/server/')
+        settings.setValue('host', self.ipLineEdit.text())
+        settings.endGroup()
+        
+        self.utils = Utils(self.ipLineEdit.text())       
         
     def populatePostGISConnectionsCombo(self):
         """

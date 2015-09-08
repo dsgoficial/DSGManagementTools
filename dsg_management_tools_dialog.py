@@ -45,8 +45,6 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         
-        self.populatePostGISConnectionsCombo()
-        
         #Ip validator
         regex = QtCore.QRegExp("\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
         self.validator=QtGui.QRegExpValidator(regex, self.ipLineEdit)
@@ -60,6 +58,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         self.ipLineEdit.setText(host)
         #--------------
         self.utils = Utils(host)
+        self.populatePostGISConnectionsCombo()
         
     @pyqtSlot(bool)
     def on_saveServerButton_clicked(self):

@@ -103,12 +103,13 @@ class Utils:
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req
 
-    def makeKillRequest(self, script, clustername):
+    def makeKillRequest(self, script, clustername, slavehost):
         serverUrl = self.server+script
         # set proxy
         self.setUrllibProxy(serverUrl)        
 
-        data = {'CLUSTERNAME':clustername}
+        data = {'CLUSTERNAME':clustername,
+                'SLAVEHOST':slavehost}
         postFile = urllib.urlencode(data)
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req

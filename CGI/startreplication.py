@@ -58,7 +58,7 @@ def storeRunningDaemons():
     for line in lines:
         split = line.split(' ')
         if split[0] == 'S':
-            if split[5] == 'host=10.67.198.228':
+            if split[5] == 'host='+slavehost:
                 hostType = 'slave'
             else:
                 hostType = 'master'

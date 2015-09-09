@@ -13,6 +13,7 @@ form = cgi.FieldStorage()
 
 # Get data from fields
 clustername = form.getvalue('CLUSTERNAME')
+slavehost = form.getvalue('SLAVEHOST')
 
 def runCall(cmd):
     subprocess.call(cmd, shell=True)
@@ -28,7 +29,7 @@ def storeRunningDaemons():
     for line in lines:
         split = line.split(' ')
         if split[0] == 'S':
-            if split[5] == 'host=10.67.198.228':
+            if split[5] == 'host='+slavehost:
                 hostType = 'slave'
             else:
                 hostType = 'master'

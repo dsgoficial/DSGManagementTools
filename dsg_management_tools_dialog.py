@@ -295,8 +295,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
 
         cluster = clustername[1::]
         split = cluster.split(separador)
+        slave = split[1]
+        (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(slave)
         
-        req = self.utils.makeKillRequest('stopreplication.py', cluster)
+        req = self.utils.makeKillRequest('stopreplication.py', cluster, slavehost)
         (ret, success) = self.utils.run(req)
         if success:
             QMessageBox.information(self, self.tr('Information!'), self.tr('Replication stopped successfully for cluster:')+' '+cluster)

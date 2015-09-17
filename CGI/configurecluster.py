@@ -3,6 +3,7 @@
 import subprocess
 import os
 import time
+import psycopg2
 # Import modules for CGI handling 
 import cgi, cgitb
 cgitb.enable()
@@ -20,6 +21,73 @@ masterpass = form.getvalue('MASTERPASS')
 slaveuser = form.getvalue('SLAVEUSER')
 slavepass = form.getvalue('SLAVEPASS')
 clustername = form.getvalue('CLUSTERNAME')
+
+def updatePostgresUsers():
+    sql = '''SELECT rolname, \'CREATE ROLE \' || rolname || \';\',
+               \'ALTER ROLE \' || rolname || \' WITH \' ||
+               CASE WHEN rolsuper=\'t\' THEN \'SUPERUSER\'
+                    WHEN rolsuper=\'f\' THEN \'NOSUPERUSER\'
+               END || \' \' ||
+               CASE WHEN rolinherit=\'t\' THEN \'INHERIT\'
+                    WHEN rolinherit=\'f\' THEN \'NOINHERIT\'
+               END || \' \' ||
+               CASE WHEN rolcreaterole=\'t\' THEN \'CREATEROLE\'
+                    WHEN rolcreaterole=\'f\' THEN \'NOCREATEROLE\'
+               END || \' \' ||       
+               CASE WHEN rolcreatedb=\'t\' THEN \'CREATEDB\'
+                    WHEN rolcreatedb=\'f\' THEN \'NOCREATEDB\'
+               END || \' \' ||       
+               CASE WHEN rolcanlogin=\'t\' THEN \'LOGIN\'
+                    WHEN rolcanlogin=\'f\' THEN \'NOLOGIN\'
+               END || \' \' ||       
+               CASE WHEN rolreplication=\'t\' THEN \'REPLICATION\'
+                    WHEN rolreplication=\'f\' THEN \'NOREPLICATION\'
+               END || \' PASSWORD \'\'\' ||
+               rolpassword || \'\'\';'        
+            FROM pg_authid where rolcanlogin = \'t\' and rolname <> \'postgres\';
+        '''
+    try:
+        conn = psycopg2.connect(database='postgres', user=slaveuser, password=slavepass, port='5432', host=slavehost)
+    except:
+        return
+        
+    cur = conn.cursor()
+    cur.execute(sql)
+    rows = cur.fetchall()
+    users = []
+    creates = []
+    alters = []
+    for row in rows:
+        users.append(row[0])
+        creates.append(row[1])
+        alters.append(row[2])
+        
+    cur.close()
+    conn.close()
+        
+    try:
+        conn = psycopg2.connect(database="postgres", user=masteruser, password=masterpass, port='5432', host=masterhost)
+    except:
+        return
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+    rows = cur.fetchall()
+    myusers = []
+    for row in rows:
+        myusers.append(row[0])
+        
+    for i in range(len(users)):
+        user = users[i]
+        if user not in myusers:
+            cur.execute(creates[i])
+            cur.execute(alters[i])
+        else:
+            cur.execute(alters[i])
+    
+    conn.commit()
+    cur.close()
+    conn.close()        
 
 def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
     script = open(name, 'r')
@@ -50,11 +118,14 @@ def runProcess(cmd_list):
             
 def runCall(cmd):
     subprocess.call(cmd, shell=True)
+    
+#updating users
+updatePostgresUsers()
 
 # Updating scripts
 updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
 updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
-
+ 
 # Configuring slony and subscribing
 cmd_list = []
 cmd_list.append('sh slony_temp.sh')

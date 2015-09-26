@@ -41,4 +41,4 @@ response = makeResponse(getRunningDaemons())
 # HTML return
 print "Content-type:text/plain"
 print 
-print response,
+print response

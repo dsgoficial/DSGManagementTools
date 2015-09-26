@@ -58,7 +58,7 @@ def message(msg):
     # HTML return
     print "Content-type:text/plain"
     print
-    print msg,
+    print msg
 
 killpids = 'ps -aux |grep '+clustername+' | awk \'{print $2}\' >> pids.log'
 
@@ -69,5 +69,5 @@ time.sleep(3)
 # Updating running slon daemons
 storeRunningDaemons()
 
-msg = 'Replicação do cluster %s parada com sucesso!' % clustername
+msg = 'Replication of cluster %s stopped successfully!' % clustername
 message(msg)

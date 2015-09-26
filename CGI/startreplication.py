@@ -76,7 +76,7 @@ def message(msg):
     # HTML return
     print "Content-type:text/plain"
     print
-    print msg,
+    print msg
 
 # Updating scripts
 updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)    
@@ -95,5 +95,5 @@ time.sleep(3)
 # Updating running slon daemons
 storeRunningDaemons()
 
-msg = 'Replicação do cluster %s iniciada com sucesso!' % clustername
+msg = 'Replication of cluster %s started successfully!' % clustername
 message(msg)

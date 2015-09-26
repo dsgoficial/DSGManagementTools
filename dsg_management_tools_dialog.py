@@ -205,9 +205,9 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
         if success:
-            QMessageBox.information(self, self.tr('Information!'), 'Cluster: '+cluster+' '+self.tr('Successfully configured!'))
+            QMessageBox.information(self, self.tr('Information!'), ret.strip())
         else:
-            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while creating cluster:')+'\n'+ret)
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while creating cluster:')+'\n'+ret.strip())
         
     @pyqtSlot(bool)
     def on_startReplicationButton_clicked(self):

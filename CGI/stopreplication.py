@@ -54,6 +54,12 @@ def killPIDs():
         cmd = '/bin/kill %s' % (pid)
         runCall(cmd)
 
+def message(msg):
+    # HTML return
+    print "Content-type:text/plain"
+    print
+    print msg
+
 killpids = 'ps -aux |grep '+clustername+' | awk \'{print $2}\' >> pids.log'
 
 # Killing daemons
@@ -63,13 +69,5 @@ time.sleep(3)
 # Updating running slon daemons
 storeRunningDaemons()
 
-# HTML return
-print "Content-type:text/html\r\n\r\n"
-print "<html>"
-print "<head>"
-print "<title>Starting replication</title>"
-print "</head>"
-print "<body>"
-print "<h2>Slon daemons kill for cluster %s</h2>" % (clustername)
-print "</body>"
-print "</html>"
+msg = 'Replicação do cluster %s parada com sucesso!' % clustername
+message(msg)

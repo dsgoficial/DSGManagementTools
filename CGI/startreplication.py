@@ -71,7 +71,13 @@ def storeRunningDaemons():
     slon_restore.close()
     
     runCall('chmod +x dsg_slon.sh')
-    
+
+def message(msg):
+    # HTML return
+    print "Content-type:text/plain"
+    print
+    print msg
+
 # Updating scripts
 updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)    
 
@@ -89,13 +95,5 @@ time.sleep(3)
 # Updating running slon daemons
 storeRunningDaemons()
 
-# HTML return
-print "Content-type:text/html\r\n\r\n"
-print "<html>"
-print "<head>"
-print "<title>Starting replication</title>"
-print "</head>"
-print "<body>"
-print "<h2>Clustername = %s | Master DB = %s | Slave DB = %s</h2>" % (clustername, masterdb, slavedb)
-print "</body>"
-print "</html>"
+msg = 'Replicação do cluster %s iniciada com sucesso!' % clustername
+message(msg)

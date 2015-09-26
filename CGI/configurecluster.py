@@ -49,6 +49,8 @@ def updatePostgresUsers():
     try:
         conn = psycopg2.connect(database='postgres', user=slaveuser, password=slavepass, port='5432', host=slavehost)
     except:
+        msg = 'Erro de conexão com a máquina slave (IP:%s)'%slavehost
+        message(msg)
         return
         
     cur = conn.cursor()
@@ -68,6 +70,8 @@ def updatePostgresUsers():
     try:
         conn = psycopg2.connect(database="postgres", user=masteruser, password=masterpass, port='5432', host=masterhost)
     except:
+        msg = 'Erro de conexão com a máquina master (IP:%s)'%masterhost
+        message(msg)
         return
     
     cur = conn.cursor()
@@ -119,6 +123,12 @@ def runProcess(cmd_list):
 def runCall(cmd):
     subprocess.call(cmd, shell=True)
     
+def message(msg):
+    # HTML return
+    print "Content-type:text/plain"
+    print
+    print msg
+
 #updating users
 updatePostgresUsers()
 
@@ -131,13 +141,5 @@ cmd_list = []
 cmd_list.append('sh slony_temp.sh')
 runProcess(cmd_list)
 
-# HTML return
-print "Content-type:text/html\r\n\r\n"
-print "<html>"
-print "<head>"
-print "<title>Slony configuration</title>"
-print "</head>"
-print "<body>"
-print "<h2>Clustername = %s | Master DB = %s | Slave DB = %s</h2>" % (clustername, masterdb, slavedb)
-print "</body>"
-print "</html>"
+msg = 'Cluster %s configurado com sucesso!' % clustername
+message(msg)

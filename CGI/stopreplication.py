@@ -58,7 +58,7 @@ def message(msg):
     # HTML return
     print "Content-type:text/plain"
     print
-    print msg
+    print msg,
 
 killpids = 'ps -aux |grep '+clustername+' | awk \'{print $2}\' >> pids.log'
 

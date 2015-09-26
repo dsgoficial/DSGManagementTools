@@ -76,7 +76,7 @@ def message(msg):
     # HTML return
     print "Content-type:text/plain"
     print
-    print msg
+    print msg,
 
 # Updating scripts
 updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)    

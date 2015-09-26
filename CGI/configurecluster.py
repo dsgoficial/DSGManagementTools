@@ -127,7 +127,7 @@ def message(msg):
     # HTML return
     print "Content-type:text/plain"
     print
-    print msg
+    print msg,
 
 #updating users
 updatePostgresUsers()

@@ -225,9 +225,9 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
         if success:
-            QMessageBox.information(self, self.tr('Information!'), self.tr('Replication started successfully for cluster:')+' '+cluster)
+            QMessageBox.information(self, self.tr('Information!'), ret.strip())
         else:
-            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while starting replication:')+'\n'+ret)
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while starting replication:')+'\n'+ret.strip())
 
     @pyqtSlot(bool)
     def on_removeClusterButton_clicked(self):
@@ -301,9 +301,9 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         req = self.utils.makeKillRequest('stopreplication.py', cluster, slavehost)
         (ret, success) = self.utils.run(req)
         if success:
-            QMessageBox.information(self, self.tr('Information!'), self.tr('Replication stopped successfully for cluster:')+' '+cluster)
+            QMessageBox.information(self, self.tr('Information!'), ret.strip())
         else:
-            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while stopping replication:')+'\n'+ret)
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Error while stopping replication:')+'\n'+ret.strip())
        
     @pyqtSlot(bool) 
     def on_refreshButton_clicked(self):

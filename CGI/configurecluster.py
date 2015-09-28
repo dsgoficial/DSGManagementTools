@@ -52,7 +52,7 @@ def updatePostgresUsers():
     except psycopg2.Error as e:
         msg = 'Erro durante a conexão com a máquina escrava (IP:%s).\n Descrição: %s' % (slavehost, e.pgerror)
         message(msg)
-        return
+        return False
         
     cur = conn.cursor()
     cur.execute(sql)
@@ -73,7 +73,7 @@ def updatePostgresUsers():
     except psycopg2.Error as e:
         msg = 'Erro durante a conexão com a máquina mestre (IP:%s).\n Descrição: %s' % (masterhost, e.pgerror)
         message(msg)
-        return
+        return False
     
     cur = conn.cursor()
     cur.execute(sql)
@@ -92,7 +92,9 @@ def updatePostgresUsers():
     
     conn.commit()
     cur.close()
-    conn.close()        
+    conn.close()
+    
+    return True    
 
 def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
     script = open(name, 'r')
@@ -131,16 +133,15 @@ def message(msg):
     print msg
 
 #updating users
-updatePostgresUsers()
-
-# Updating scripts
-updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
-updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
- 
-# Configuring slony and subscribing
-cmd_list = []
-cmd_list.append('sh slony_temp.sh')
-runProcess(cmd_list)
-
-msg = 'Cluster %s configurado com sucesso!' % clustername
-message(msg)
+if updatePostgresUsers():    
+    # Updating scripts
+    updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
+    updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
+     
+    # Configuring slony and subscribing
+    cmd_list = []
+    cmd_list.append('sh slony_temp.sh')
+    runProcess(cmd_list)
+    
+    msg = 'Cluster %s configurado com sucesso!' % clustername
+    message(msg)

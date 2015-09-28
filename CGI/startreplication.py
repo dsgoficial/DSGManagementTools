@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import subprocess
 import os, time
@@ -95,5 +96,5 @@ time.sleep(3)
 # Updating running slon daemons
 storeRunningDaemons()
 
-msg = 'Replication of cluster %s started successfully!' % clustername
+msg = 'Replicação do cluster %s iniciada com sucesso!' % clustername
 message(msg)

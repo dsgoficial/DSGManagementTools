@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import subprocess
 import os
@@ -48,8 +49,8 @@ def updatePostgresUsers():
         '''
     try:
         conn = psycopg2.connect(database='postgres', user=slaveuser, password=slavepass, port='5432', host=slavehost)
-    except:
-        msg = 'Error while connecting to slave host (IP:%s)' % slavehost
+    except psycopg2.Error as e:
+        msg = 'Erro durante a conexão com a máquina escrava (IP:%s).\n Descrição: %s' % (slavehost, e.pgerror)
         message(msg)
         return
         
@@ -69,8 +70,8 @@ def updatePostgresUsers():
         
     try:
         conn = psycopg2.connect(database="postgres", user=masteruser, password=masterpass, port='5432', host=masterhost)
-    except:
-        msg = 'Error while connecting to master host (IP:%s)' % masterhost
+    except psycopg2.Error as e:
+        msg = 'Erro durante a conexão com a máquina mestre (IP:%s).\n Descrição: %s' % (masterhost, e.pgerror)
         message(msg)
         return
     
@@ -127,7 +128,7 @@ def message(msg):
     # HTML return
     print "Content-type:text/plain"
     print
-    print msg,
+    print msg
 
 #updating users
 updatePostgresUsers()

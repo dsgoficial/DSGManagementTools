@@ -204,6 +204,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
+        ret = ret.decode(encoding='UTF-8')
         if success:
             QMessageBox.information(self, self.tr('Information!'), ret.strip())
         else:
@@ -224,6 +225,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
+        ret = ret.decode(encoding='UTF-8')
         if success:
             QMessageBox.information(self, self.tr('Information!'), ret.strip())
         else:
@@ -300,6 +302,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         req = self.utils.makeKillRequest('stopreplication.py', cluster, slavehost)
         (ret, success) = self.utils.run(req)
+        ret = ret.decode(encoding='UTF-8')
         if success:
             QMessageBox.information(self, self.tr('Information!'), ret.strip())
         else:
@@ -313,6 +316,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         
         req = self.utils.makeGetRunningDaemonsRequest('getrunningdaemons.py')
         (ret, success) = self.utils.run(req)
+        ret = ret.decode(encoding='UTF-8')
         if not success:
             QMessageBox.warning(self, self.tr("Warning!"), self.tr('Error while checking for active replications:')+'\n'+ret)
             return

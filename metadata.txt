@@ -10,9 +10,12 @@
 name=DsgManagementTools
 qgisMinimumVersion=2.6
 description=Tools to manage DSG's cartographic production
-version=1.0
+version=1.0.1
 author=Brazilian Army - Geographic Service Bureau
 email=suporte.dsgtools@dsg.eb.mil.br
+about=
+	DSGManagementTools with the followinf features
+	-Replication of PostGIS databases created with the DsgTools plugin
 
 # End of mandatory metadata
 
@@ -20,6 +23,7 @@ email=suporte.dsgtools@dsg.eb.mil.br
 
 # Uncomment the following line and add your changelog:
 # changelog=
+	1.0.1- The table sequences are now being replicated.
 
 # Tags are comma separated with spaces allowed
 tags=

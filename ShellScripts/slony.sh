@@ -446,7 +446,7 @@ set add table (set id=1, origin=1, id=410, fully qualified name = 'complexos.sau
 set add table (set id=1, origin=1, id=411, fully qualified name = 'complexos.sau_org_servico_social', comment='Tabela complexos.sau_org_servico_social');
 set add table (set id=1, origin=1, id=412, fully qualified name = 'complexos.sau_org_servico_social_pub', comment='Tabela complexos.sau_org_servico_social_pub');
 set add table (set id=1, origin=1, id=413, fully qualified name = 'complexos.tra_complexo_aeroportuario', comment='Tabela complexos.tra_complexo_aeroportuario');
-set add table (set id=1, origin=1, id=414, fully qualified name = 'complexos.tra_compl=exo_portuario', comment='Tabela complexos.tra_complexo_portuario');
+set add table (set id=1, origin=1, id=414, fully qualified name = 'complexos.tra_complexo_portuario', comment='Tabela complexos.tra_complexo_portuario');
 set add table (set id=1, origin=1, id=415, fully qualified name = 'complexos.tra_duto', comment='Tabela complexos.tra_duto');
 set add table (set id=1, origin=1, id=416, fully qualified name = 'complexos.tra_estrut_apoio', comment='Tabela complexos.tra_estrut_apoio');
 set add table (set id=1, origin=1, id=417, fully qualified name = 'complexos.tra_estrut_transporte', comment='Tabela complexos.tra_estrut_transporte');

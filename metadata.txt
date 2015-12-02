@@ -24,6 +24,7 @@ about=
 # Uncomment the following line and add your changelog:
 # changelog=
 	1.0.1- The table sequences are now being replicated.
+	1.1- Now the timestamp of the last SYNC event is shown in the tab "Active Replications"
 
 # Tags are comma separated with spaces allowed
 tags=

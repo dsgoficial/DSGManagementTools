@@ -1,13 +1,50 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 import subprocess
 import os
+import psycopg2
 # Import modules for CGI handling 
 import cgi, cgitb
 cgitb.enable()
 
 separador = '_to_'
+
+def message(msg):
+    # HTML return
+    print "Content-type:text/plain"
+    print
+    print msg
+
+def checkSync(line):
+    split =  line.split(' ')
+    cluster = split[2]
+    dbname = str(split[3].split('=')[1]).strip()
+    dbuser = str(split[4].split('=')[1]).strip()
+    dbhost = str(split[5].split('=')[1]).strip()
+    dbpass = str(split[6].split('=')[1]).strip()
+    
+    try:
+        conn = psycopg2.connect(database=dbname, user=dbuser, password=dbpass, port='5432', host=dbhost)
+    except psycopg2.Error as e:
+        msg = 'Erro durante a conexão com a máquina escrava (IP:%s).\n Descrição: %s' % (dbhost, e.pgerror)
+        message(msg)
+        return False
+    
+    cur = conn.cursor()
+    sql = 'SELECT ev_seqno, to_char(ev_timestamp, \'YYYY-MM-DD  HH24:MI:SS\') FROM _borba_replic_to_local_escravo.sl_event WHERE ev_type = \'SYNC\' ORDER BY ev_seqno DESC LIMIT 1'
+    cur.execute(sql)
+    rows = cur.fetchall()
+    ev_seqno = None
+    ev_timestamp = None
+    for row in rows:
+        ev_seqno = str(row[0])
+        ev_timestamp = str(row[1])
+        print ev_seqno, ev_timestamp
+        
+    cur.close()
+    conn.close()
+    
+    return ev_seqno, ev_timestamp
 
 def runCall(cmd):
     subprocess.call(cmd, shell=True)    
@@ -26,15 +63,29 @@ def makeResponse(lines):
         return 'Nada sendo replicado'
     
     response = ''
+    current_cluster = ''
     for i in range(len(lines)):
         line = lines[i]
         clustername = line.split(' ')[2]
+        
+        if current_cluster == clustername:
+            continue
+        
         split = clustername.split(separador)
         de = split[0]
         para = split[1]
         response += 'Replicando de '+de+' para '+para
+        
+        ev_seqno, ev_timestamp = checkSync(line)
+        if ev_seqno and ev_timestamp:
+            response += ' (Último Sincronismo em: '+ev_timestamp+')'
+        else:
+            response += ' (Cópia em andamento...)'
+        
         if i != len(lines)-1:
             response += '*'
+            
+        current_cluster = clustername
     return response
 
 response = makeResponse(getRunningDaemons())

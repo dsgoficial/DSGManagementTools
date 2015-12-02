@@ -328,7 +328,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         children = []
         #checking if the text is already in the tree widget
         for text in split:
-            if text not in children:
+            if text not in children and text != '':
                 item = QTreeWidgetItem(parent)
                 item.setExpanded(True)
                 item.setText(0,text)

@@ -10,7 +10,7 @@
 name=DsgManagementTools
 qgisMinimumVersion=2.6
 description=Tools to manage DSG's cartographic production
-version=1.0.1
+version=1.1
 author=Brazilian Army - Geographic Service Bureau
 email=suporte.dsgtools@dsg.eb.mil.br
 about=

@@ -53,7 +53,7 @@ def runCall(cmd):
     subprocess.call(cmd, shell=True)
     
 def storeRunningDaemons():
-    listdaemons = 'ps -aux |grep -E \'/usr/bin/slon.*'+separador+'\'|grep -v grep | awk \'{print \"\"$8\" \"$11\" \"$12\" \"$13\" \"$14\" \"$15\" \"$16\"\"}\' > running_daemons.log'
+    listdaemons = 'ps -aux |grep -E \'/usr/bin/slon.*'+separador+'\'|grep -v grep | awk \'{print \"\"$8\" \"$11\" \"$12\" \"$13\" \"$14\" \"$15\" \"$16\" \"$17\"\"}\' > running_daemons.log'
     runCall(listdaemons)
     
     daemons = open('running_daemons.log', 'r')
@@ -67,7 +67,7 @@ def storeRunningDaemons():
                 hostType = 'slave'
             else:
                 hostType = 'master'
-            s = '/usr/bin/nohup '+split[1]+' '+split[2]+' \"'+split[3]+' '+split[4]+' '+split[5]+' '+split[6].strip('\n')+'\" >> /usr/lib/cgi-bin/'+split[2]+'_'+hostType+'.log &\n'
+            s = '/usr/bin/nohup '+split[1]+' '+split[2]+' \"'+split[3]+' '+split[4]+' '+split[5]+' '+split[6]+' '+split[7].strip('\n')+'\" >> /usr/lib/cgi-bin/'+split[2]+'_'+hostType+'.log &\n'
             newlines.append(s)
                 
     slon_restore = open('dsg_slon.sh', 'wb')

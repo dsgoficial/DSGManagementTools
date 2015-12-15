@@ -21,10 +21,11 @@ def checkSync(line):
     dbname = str(split[3].split('=')[1]).strip()
     dbuser = str(split[4].split('=')[1]).strip()
     dbhost = str(split[5].split('=')[1]).strip()
-    dbpass = str(split[6].split('=')[1]).strip()
-    
+    dbport = str(split[6].split('=')[1]).strip()
+    dbpass = str(split[7].split('=')[1]).strip()
+
     try:
-        conn = psycopg2.connect(database=dbname, user=dbuser, password=dbpass, port='5432', host=dbhost)
+        conn = psycopg2.connect(database=dbname, user=dbuser, password=dbpass, port=dbport, host=dbhost)
     except psycopg2.Error as e:
         msg = 'Erro durante a conexão com a máquina escrava (IP:%s).\n Descrição: %s' % (dbhost, e.pgerror)
         message(msg)
@@ -50,7 +51,7 @@ def runCall(cmd):
     subprocess.call(cmd, shell=True)    
     
 def getRunningDaemons():
-    listdaemons = 'ps -aux |grep -E \'/usr/bin/slon.*'+separador+'\'|grep -v grep | awk \'{print \"\"$8\" \"$11\" \"$12\" \"$13\" \"$14\" \"$15\" \"$16\"\"}\' > running_daemons.log'
+    listdaemons = 'ps -aux |grep -E \'/usr/bin/slon.*'+separador+'\'|grep -v grep | awk \'{print \"\"$8\" \"$11\" \"$12\" \"$13\" \"$14\" \"$15\" \"$16\" \"$17\"\"}\' > running_daemons.log'
     runCall(listdaemons)
     
     daemons = open('running_daemons.log', 'r')

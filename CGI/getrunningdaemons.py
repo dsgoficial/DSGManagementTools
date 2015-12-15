@@ -31,7 +31,7 @@ def checkSync(line):
         return False
     
     cur = conn.cursor()
-    sql = 'SELECT ev_seqno, to_char(ev_timestamp, \'YYYY-MM-DD  HH24:MI:SS\') FROM _borba_replic_to_local_escravo.sl_event WHERE ev_type = \'SYNC\' ORDER BY ev_seqno DESC LIMIT 1'
+    sql = 'SELECT ev_seqno, to_char(ev_timestamp, \'YYYY-MM-DD  HH24:MI:SS\') FROM _'+cluster+'.sl_event WHERE ev_type = \'SYNC\' ORDER BY ev_seqno DESC LIMIT 1'
     cur.execute(sql)
     rows = cur.fetchall()
     ev_seqno = None

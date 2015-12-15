@@ -3,6 +3,8 @@ MASTERDBNAME=[masterdbname]
 SLAVEDBNAME=[slavedbname]
 MASTERHOST=[masterhost]
 SLAVEHOST=[slavehost]
+MASTERPORT=[masterport]
+SLAVEPORT=[slaveport]
 MASTERUSER=[masteruser]
 MASTERPASS=[masterpass]
 SLAVEUSER=[slaveuser]
@@ -20,8 +22,8 @@ cluster name = $CLUSTERNAME;
 # that connect from the administrators workstation (where
 # slonik is executed).
 # ----
-node 1 admin conninfo = 'dbname=$MASTERDBNAME host=$MASTERHOST user=$MASTERUSER password=$MASTERPASS';
-node 2 admin conninfo = 'dbname=$SLAVEDBNAME host=$SLAVEHOST user=$SLAVEUSER password=$SLAVEPASS';
+node 1 admin conninfo = 'dbname=$MASTERDBNAME host=$MASTERHOST port=$MASTERPORT user=$MASTERUSER password=$MASTERPASS';
+node 2 admin conninfo = 'dbname=$SLAVEDBNAME host=$SLAVEHOST port=$SLAVEPORT user=$SLAVEUSER password=$SLAVEPASS';
 
 # ----
 # Node 2 subscribes set 1

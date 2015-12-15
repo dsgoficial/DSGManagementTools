@@ -202,7 +202,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())
         
-        req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
+        req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
         ret = ret.decode(encoding='UTF-8')
         if success:
@@ -223,7 +223,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_2.currentText())
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo_2.currentText())
         
-        req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster)
+        req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
         ret = ret.decode(encoding='UTF-8')
         if success:

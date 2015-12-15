@@ -17,6 +17,8 @@ masterdb = form.getvalue('MASTERDBNAME')
 slavedb = form.getvalue('SLAVEDBNAME')
 masterhost = form.getvalue('MASTERHOST')
 slavehost = form.getvalue('SLAVEHOST')
+masterport = form.getvalue('MASTERPORT')
+slaveport = form.getvalue('SLAVEPORT')
 masteruser = form.getvalue('MASTERUSER')
 masterpass = form.getvalue('MASTERPASS')
 slaveuser = form.getvalue('SLAVEUSER')
@@ -48,7 +50,7 @@ def updatePostgresUsers():
             FROM pg_authid where rolcanlogin = \'t\' and rolname <> \'postgres\';
         '''
     try:
-        conn = psycopg2.connect(database='postgres', user=slaveuser, password=slavepass, port='5432', host=slavehost)
+        conn = psycopg2.connect(database='postgres', user=slaveuser, password=slavepass, port=slaveport, host=slavehost)
     except psycopg2.Error as e:
         msg = 'Erro durante a conexão com a máquina escrava (IP:%s).\n Descrição: %s' % (slavehost, e.pgerror)
         message(msg)
@@ -69,7 +71,7 @@ def updatePostgresUsers():
     conn.close()
         
     try:
-        conn = psycopg2.connect(database="postgres", user=masteruser, password=masterpass, port='5432', host=masterhost)
+        conn = psycopg2.connect(database="postgres", user=masteruser, password=masterpass, port=masterport, host=masterhost)
     except psycopg2.Error as e:
         msg = 'Erro durante a conexão com a máquina mestre (IP:%s).\n Descrição: %s' % (masterhost, e.pgerror)
         message(msg)
@@ -96,7 +98,7 @@ def updatePostgresUsers():
     
     return True    
 
-def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
+def updateScript(name, masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster):
     script = open(name, 'r')
     scriptData = script.read()
     script.close()
@@ -105,6 +107,8 @@ def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, mas
     newData = newData.replace('[slavedbname]', slavedb)
     newData = newData.replace('[masterhost]', masterhost)
     newData = newData.replace('[slavehost]', slavehost)
+    newData = newData.replace('[masterport]', masterport)
+    newData = newData.replace('[slaveport]', slaveport)
     newData = newData.replace('[masteruser]', masteruser)
     newData = newData.replace('[masterpass]', masterpass)
     newData = newData.replace('[slaveuser]', slaveuser)
@@ -135,8 +139,8 @@ def message(msg):
 #updating users
 if updatePostgresUsers():    
     # Updating scripts
-    updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
-    updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)
+    updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, clustername)
+    updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, clustername)
      
     # Configuring slony and subscribing
     cmd_list = []

@@ -17,13 +17,15 @@ masterdb = form.getvalue('MASTERDBNAME')
 slavedb = form.getvalue('SLAVEDBNAME')
 masterhost = form.getvalue('MASTERHOST')
 slavehost = form.getvalue('SLAVEHOST')
+masterport = form.getvalue('MASTERPORT')
+slaveport = form.getvalue('SLAVEPORT')
 masteruser = form.getvalue('MASTERUSER')
 masterpass = form.getvalue('MASTERPASS')
 slaveuser = form.getvalue('SLAVEUSER')
 slavepass = form.getvalue('SLAVEPASS')
 clustername = form.getvalue('CLUSTERNAME')
 
-def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
+def updateScript(name, masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster):
     script = open(name, 'r')
     scriptData = script.read()
     script.close()
@@ -32,6 +34,8 @@ def updateScript(name, masterdb, slavedb, masterhost, slavehost, masteruser, mas
     newData = newData.replace('[slavedbname]', slavedb)
     newData = newData.replace('[masterhost]', masterhost)
     newData = newData.replace('[slavehost]', slavehost)
+    newData = newData.replace('[masterport]', masterport)
+    newData = newData.replace('[slaveport]', slaveport)
     newData = newData.replace('[masteruser]', masteruser)
     newData = newData.replace('[masterpass]', masterpass)
     newData = newData.replace('[slaveuser]', slaveuser)
@@ -80,12 +84,12 @@ def message(msg):
     print msg
 
 # Updating scripts
-updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, clustername)    
+updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, clustername)
 
 # Defining commands
 slonsubscribe = '/usr/bin/nohup sh slony_subscribe_temp.sh >> %s_subscribe.log &' % clustername
-slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> %s_master.log &' % (clustername, masterdb, masteruser, masterhost, masterpass, clustername)
-slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s password=%s\" >> %s_slave.log &' % (clustername, slavedb, slaveuser, slavehost, slavepass, clustername)
+slonmastercmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s port=%s password=%s\" >> %s_master.log &' % (clustername, masterdb, masteruser, masterhost, masterport, masterpass, clustername)
+slonslavecmd = '/usr/bin/nohup /usr/bin/slon %s \"dbname=%s user=%s host=%s port=%s password=%s\" >> %s_slave.log &' % (clustername, slavedb, slaveuser, slavehost, slaveport, slavepass, clustername)
 
 # Starting daemons
 runCall(slonsubscribe)

@@ -3,6 +3,8 @@ MASTERDBNAME=[masterdbname]
 SLAVEDBNAME=[slavedbname]
 MASTERHOST=[masterhost]
 SLAVEHOST=[slavehost]
+MASTERPORT=[masterport]
+SLAVEPORT=[slaveport]
 MASTERUSER=[masteruser]
 MASTERPASS=[masterpass]
 SLAVEUSER=[slaveuser]
@@ -19,8 +21,8 @@ cluster name = $CLUSTERNAME;
 # node on each side of the cluster, the syntax is that of PQconnectdb in
 # the C-API
 # --
-node 1 admin conninfo = 'dbname=$MASTERDBNAME host=$MASTERHOST user=$MASTERUSER password=$MASTERPASS';
-node 2 admin conninfo = 'dbname=$SLAVEDBNAME host=$SLAVEHOST user=$SLAVEUSER password=$SLAVEPASS';
+node 1 admin conninfo = 'dbname=$MASTERDBNAME host=$MASTERHOST port=$MASTERPORT user=$MASTERUSER password=$MASTERPASS';
+node 2 admin conninfo = 'dbname=$SLAVEDBNAME host=$SLAVEHOST port=$SLAVEPORT user=$SLAVEUSER password=$SLAVEPASS';
 #--
 # init the first node.  This creates the schema
 # _$CLUSTERNAME containing all replication system specific database
@@ -593,6 +595,6 @@ set add sequence (set id=1, origin=1, id=554, fully qualified name = 'public.aux
 # each other and how they should listen for events.
 #--
 store node (id=2, comment = 'Slave node', event node=1);
-store path (server = 1, client = 2, conninfo='dbname=$MASTERDBNAME host=$MASTERHOST user=$MASTERUSER password=$MASTERPASS');
-store path (server = 2, client = 1, conninfo='dbname=$SLAVEDBNAME host=$SLAVEHOST user=$SLAVEUSER password=$SLAVEPASS');
+store path (server = 1, client = 2, conninfo='dbname=$MASTERDBNAME host=$MASTERHOST port=$MASTERPORT user=$MASTERUSER password=$MASTERPASS');
+store path (server = 2, client = 1, conninfo='dbname=$SLAVEDBNAME host=$SLAVEHOST port=$SLAVEPORT user=$SLAVEUSER password=$SLAVEPASS');
 _EOF_

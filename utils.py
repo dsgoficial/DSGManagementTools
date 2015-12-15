@@ -85,7 +85,7 @@ class Utils:
         settings.endGroup()
         return (database, host, port, user, password)    
     
-    def makeRequest(self, script, masterdb, slavedb, masterhost, slavehost, masteruser, masterpass, slaveuser, slavepass, cluster):
+    def makeRequest(self, script, masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster):
         serverUrl = self.server+script
         # set proxy
         self.setUrllibProxy(serverUrl)        
@@ -94,6 +94,8 @@ class Utils:
                 'SLAVEDBNAME':slavedb,
                 'MASTERHOST':masterhost,
                 'SLAVEHOST':slavehost,
+                'MASTERPORT':masterport,
+                'SLAVEPORT':slaveport,
                 'MASTERUSER':masteruser,
                 'MASTERPASS':masterpass,
                 'SLAVEUSER':slaveuser,

@@ -12,4 +12,11 @@ do
 done
 
 sudo chmod 777 -R /usr/lib/cgi-bin
+
+#configuring crontab
+sudo crontab -u www-data -l > mycron
+echo "@reboot /usr/lib/cgi-bin/dsg_slon.sh" > mycron
+sudo crontab -u www-data mycron
+rm mycron
+
 exit

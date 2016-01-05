@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#----------------setting proxy--------------------------------------------
 echo "A conexão é feita com proxy?: (S/N)"; read USEPROXY
 if [ "$USEPROXY" == "S" ]; then
 	echo "Entre com o endereço do proxy: "; read PROXYHOST
@@ -19,7 +20,9 @@ else
   echo "Parâmetro inválido! Nada foi feito"
   exit
 fi
+#----------------setting proxy--------------------------------------------
 
+#----------------installing and configuring packages--------------------------------------------
 #preparing QGIS repository
 $SUDO add-apt-repository ppa:ubuntugis/ubuntugis-unstable
 $SUDO apt-get update
@@ -33,7 +36,9 @@ $SUDO apt-get install qgis saga python-saga otb-bin python-otb otb-bin-qt grass 
 #configuring apache2
 sudo a2enmod cgi
 sudo /etc/init.d/apache2 restart
+#----------------installing and configuring packages--------------------------------------------
 	
+#----------------updating plugins--------------------------------------------
 #getting plugins latest tag html files
 $WGET https://github.com/lcoandrade/DsgTools/releases/latest -O ~/lastestdsgtools.html
 $WGET https://github.com/phborba/DSGManagementTools/releases/latest -O ~/lastestdsgmanagementtools.html
@@ -41,10 +46,6 @@ $WGET https://github.com/phborba/DSGManagementTools/releases/latest -O ~/lastest
 #getting latest tags urls
 dsgtoolsurl=$(grep -r "/lcoandrade/DsgTools/archive/" ~/lastestdsgtools.html | grep ".zip" | awk -F' ' '{print $2}' | awk -F'=' '{print $2}' | awk -F'"' '{print $2}')
 dsgmanagementtoolsurl=$(grep -r "/phborba/DSGManagementTools/archive/" ~/lastestdsgmanagementtools.html | grep ".zip" | awk -F' ' '{print $2}' | awk -F'=' '{print $2}' | awk -F'"' '{print $2}')
-
-#removing unnecessary files
-rm -rf ~/lastestdsgtools.html
-rm -rf ~/lastestdsgmanagementtools.html
 
 #downloading latest tags
 $WGET https://github.com/$dsgtoolsurl -O ~/dsgtools.zip
@@ -65,5 +66,33 @@ unzip ~/dsgmanagementtools.zip -d ~/
 #moving new plugins versions
 mv ~/$dsgtoolsfolder ~/hahaha/DsgTools
 mv ~/$dsgmanagementtoolsfolder ~/hahaha/DSGManagementTools
+
+#removing unnecessary files
+rm -rf ~/lastestdsgtools.html
+rm -rf ~/lastestdsgmanagementtools.html
+rm -rf ~/dsgtools.zip
+rm -rf ~/dsgmanagementtools.zip
+#----------------installing and configuring packages--------------------------------------------
+
+#----------------updating CGI and Shell Scripts for DSGManagementTools--------------------------------------------
+#copying files
+for f in ~/.qgis2/python/plugins/DSGManagementTools/CGI/*.py
+do
+  sudo cp $f /usr/lib/cgi-bin
+done
+
+for f in ~/.qgis2/python/plugins/DSGManagementTools/ShellScripts/*.sh
+do
+  sudo cp $f /usr/lib/cgi-bin
+done
+
+sudo chmod 777 -R /usr/lib/cgi-bin
+
+#configuring crontab
+sudo crontab -u www-data -l > mycron
+echo "@reboot /usr/lib/cgi-bin/dsg_slon.sh" > mycron
+sudo crontab -u www-data mycron
+rm mycron
+#----------------updating CGI and Shell Scripts for DSGManagementTools--------------------------------------------
 
 exit

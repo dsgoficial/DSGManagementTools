@@ -56,22 +56,24 @@ dsgtoolsfolder=$(zipinfo -1 ~/dsgtools.zip | head -1 |awk -F'/' '{print $1}')
 dsgmanagementtoolsfolder=$(zipinfo -1 ~/dsgmanagementtools.zip | head -1 |awk -F'/' '{print $1}')
 
 #deleting old plugins
-#rm -rf ~/.qgis2/python/plugins/DsgTools
-#rm -rf ~/.qgis2/python/plugins/DSGManagementTools
+sudo rm -rf ~/.qgis2/python/plugins/DsgTools
+sudo rm -rf ~/.qgis2/python/plugins/DSGManagementTools
 
 #unzipping plugins
 unzip ~/dsgtools.zip -d ~/
 unzip ~/dsgmanagementtools.zip -d ~/
 
 #moving new plugins versions
-mv ~/$dsgtoolsfolder ~/hahaha/DsgTools
-mv ~/$dsgmanagementtoolsfolder ~/hahaha/DSGManagementTools
+sudo mv ~/$dsgtoolsfolder ~/.qgis2/python/plugins/DsgTools
+sudo mv ~/$dsgmanagementtoolsfolder ~/.qgis2/python/plugins/DsgTools
 
 #removing unnecessary files
 rm -rf ~/lastestdsgtools.html
 rm -rf ~/lastestdsgmanagementtools.html
 rm -rf ~/dsgtools.zip
 rm -rf ~/dsgmanagementtools.zip
+
+sudo chmod 777 -R ~/.qgis2/python/plugins
 #----------------installing and configuring packages--------------------------------------------
 
 #----------------updating CGI and Shell Scripts for DSGManagementTools--------------------------------------------

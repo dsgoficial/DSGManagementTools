@@ -1,8 +1,9 @@
 #!/bin/bash
 
 #configuring postgresql network--------------------------------------------
-export PGPASSWORD=postgres
-echo $PGPASSWORD
+echo "Teste? (s/n) "; read sim
+sim="${sim:-s}"
+echo $sim
 #----------------installing and configuring packages--------------------------------------------
 
 exit

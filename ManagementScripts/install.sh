@@ -22,7 +22,7 @@ else
 fi
 #----------------setting proxy--------------------------------------------
 
-#----------------installing and configuring packages--------------------------------------------
+#----------------installing and configuring packages-------------------------------------------
 #preparing QGIS repository
 $SUDO add-apt-repository ppa:ubuntugis/ubuntugis-unstable
 $SUDO apt-get update
@@ -37,14 +37,17 @@ $SUDO apt-get install qgis saga python-saga otb-bin python-otb otb-bin-qt grass 
 sudo a2enmod cgi
 sudo /etc/init.d/apache2 restart
 	
-#configuring postgresql network--------------------------------------------
+#configuring postgresql network
 postgresqlversion=$(psql -V | awk -F' ' '{print $3}' | awk -F'.' '{print $1 "." $2}')
 postgresqlfolder="/etc/postgresql/$postgresqlversion/main"
-sed "s/listen_addresses = 'localhost'/listen_addresses = '\*'/g" $postgresqlfolder/postgresl.conf
-sed "s/max_connections = 100/max_connections = 1000/g" $postgresqlfolder/postgresl.conf
+sudo sed -i "s/listen_addresses = 'localhost'/listen_addresses = '\*'/g" $postgpostgresqlfolder/postgresql.conf
+sudo sed -i "s/max_connections = 100/max_connections = 1000/g" $postgpostgresqlfolder/postgresql.conf
+sudo sed -i "s:127.0.0.1/32:0.0.0.0/0:g" $postgpostgresqlfolder/pg_hba.conf
+#sudo printf "\n" >> ~/hba.conf
+#sudo echo "host	all		all		0.0.0.0/0		md5" >> ~/hba.conf
 #----------------installing and configuring packages--------------------------------------------
 	
-#----------------updating plugins--------------------------------------------
+#----------------updating plugins-------------------------------------------
 #getting plugins latest tag html files
 $WGET https://github.com/lcoandrade/DsgTools/releases/latest -O ~/lastestdsgtools.html
 $WGET https://github.com/phborba/DSGManagementTools/releases/latest -O ~/lastestdsgmanagementtools.html
@@ -82,7 +85,7 @@ rm -rf ~/dsgmanagementtools.zip
 sudo chmod 777 -R ~/.qgis2/python/plugins
 #----------------installing and configuring packages--------------------------------------------
 
-#----------------updating CGI and Shell Scripts for DSGManagementTools--------------------------------------------
+#----------------updating CGI and Shell Scripts for DSGManagementTools-------------------------------------------
 #copying files
 for f in ~/.qgis2/python/plugins/DSGManagementTools/CGI/*.py
 do

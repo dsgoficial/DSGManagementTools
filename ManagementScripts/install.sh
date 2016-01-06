@@ -152,7 +152,7 @@ fi
 echo "Configurar Crontab?"; read configurarcrontab
 configurarcrontab="${configurarcrontab:=s}"
 if [[ $configurarcrontab == [sS] ]]; then
-	configurarcrontab
+	configure_crontab
 fi
 
 exit

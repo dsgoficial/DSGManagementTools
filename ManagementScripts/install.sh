@@ -1,23 +1,9 @@
 #!/bin/bash
 
-echo "Adicionar repositório do QGIS?"; read addqgisrepository
-addqgisrepository="${addqgisrepository:-s}"
-echo "Instalar pacotes?"; read instalarpacotes
-instalarpacotes="${instalarpacotes:-s}"
-echo "Configurar Apache?"; read configurarapache
-configurarapache="${configurarapache:-s}"
-echo "Configurar PostgresSQL?"; read configurarpostgres
-configurarpostgres="${configurarpostgres:-s}"
-echo "Atualizatr plugins?"; read atualizarplugins
-atualizarplugins="${atualizarplugins:-s}"
-echo "Atualizar DSGManagementTools?"; read atualizardsgmanagementtools
-atualizardsgmanagementtools="${atualizardsgmanagementtools:-s}"
-echo "Configurar Crontab?"; read configurarcrontab
-configurarcrontab="${configurarcrontab:-s}"
-
 function set_proxy {
-	echo "A conexão é feita com proxy?: (S/N)"; read USEPROXY
-	if [ "$USEPROXY" == "S" ]; then
+	echo "A conexão é feita com proxy?: (s/n)"; read USEPROXY
+	USEPROXY="${USEPROXY:-s}"
+	if [ "$USEPROXY" == "s" ]; then
 		echo "Entre com o endereço do proxy: "; read PROXYHOST
 		echo "Entre com a porta do proxy: "; read PROXYPORT
 		echo "Entre com o usuário do proxy: "; read PROXYUSER
@@ -28,7 +14,7 @@ function set_proxy {
 	  
 		SUDO="sudo -E"
 		WGET="wget -E"
-	elif [ "$USEPROXY" == "N" ]; then
+	elif [ "$USEPROXY" == "n" ]; then
 		SUDO="sudo"
 		WGET="wget"	
 	else
@@ -127,33 +113,46 @@ function configure_crontab {
 }
 
 set_proxy
-
+echo "Adicionar repositório do QGIS?"; read addqgisrepository
+addqgisrepository="${addqgisrepository:-s}"
 if [ "addqgisrepository" == "s" ]; then
 	add_qadd_qgis_repository
 fi
 
+echo "Instalar pacotes?"; read instalarpacotes
+instalarpacotes="${instalarpacotes:-s}"
 if [ "instalarpacotes" == "s" ]; then
 	install_packages
 fi
 
+echo "Configurar Apache?"; read configurarapache
+configurarapache="${configurarapache:-s}"
 if [ "configurarapache" == "s" ]; then
 	configure_apache
 fi
 
+echo "Configurar PostgresSQL?"; read configurarpostgres
+configurarpostgres="${configurarpostgres:-s}"
 if [ "configurarpostgres" == "s" ]; then
 	configure_postgresql
 fi
 
+echo "Atualizatr plugins?"; read atualizarplugins
+atualizarplugins="${atualizarplugins:-s}"
 if [ "atualizarplugins" == "s" ]; then
 	update_plugins
 fi
 
+echo "Atualizar DSGManagementTools?"; read atualizardsgmanagementtools
+atualizardsgmanagementtools="${atualizardsgmanagementtools:-s}"
 if [ "atualizardsgmanagementtools" == "s" ]; then
 	update_dsgmanagementtools
 fi
 
+echo "Configurar Crontab?"; read configurarcrontab
+configurarcrontab="${configurarcrontab:-s}"
 if [ "configurarcrontab" == "s" ]; then
-	configure_crontab
+	configurarcrontab
 fi
 
 exit

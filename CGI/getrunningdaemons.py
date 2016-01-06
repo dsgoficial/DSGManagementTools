@@ -27,7 +27,7 @@ def checkSync(line):
     try:
         conn = psycopg2.connect(database=dbname, user=dbuser, password=dbpass, port=dbport, host=dbhost)
     except psycopg2.Error as e:
-        msg = 'Erro durante a conexão com a máquina escrava (IP:%s) do cluster %s.\n Descrição: %s' % (dbhost, cluster, e.pgerror)
+        msg = 'Erro durante a conexão com a máquina (IP:%s | Banco:%s | Cluster: %s).\n Descrição: %s' % (dbhost, dbname, cluster, e.pgerror)
         message(msg)
         return False, None, None
     

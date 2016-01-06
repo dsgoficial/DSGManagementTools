@@ -37,5 +37,12 @@ rm -rf ~/dsgtools.zip
 rm -rf ~/dsgmanagementtools.zip
 
 sudo chmod 777 -R ~/.qgis2/python/plugins
+	
+#----------------configuring postgresql network--------------------------------------------
+postgresqlversion=$(psql -V | awk -F' ' '{print $3}' | awk -F'.' '{print $1 "." $2}')
+postgresqlfolder="/etc/postgresql/$postgresqlversion/main"
+sed "s/listen_addresses = 'localhost'/listen_addresses = '\*'/g" $postgresqlfolder/postgresl.conf
+sed "s/max_connections = 100/max_connections = 1000/g" $postgresqlfolder/postgresl.conf
+#----------------configuring postgresql network--------------------------------------------
 
 exit

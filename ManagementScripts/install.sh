@@ -36,6 +36,12 @@ $SUDO apt-get install qgis saga python-saga otb-bin python-otb otb-bin-qt grass 
 #configuring apache2
 sudo a2enmod cgi
 sudo /etc/init.d/apache2 restart
+	
+#configuring postgresql network--------------------------------------------
+postgresqlversion=$(psql -V | awk -F' ' '{print $3}' | awk -F'.' '{print $1 "." $2}')
+postgresqlfolder="/etc/postgresql/$postgresqlversion/main"
+sed "s/listen_addresses = 'localhost'/listen_addresses = '\*'/g" $postgresqlfolder/postgresl.conf
+sed "s/max_connections = 100/max_connections = 1000/g" $postgresqlfolder/postgresl.conf
 #----------------installing and configuring packages--------------------------------------------
 	
 #----------------updating plugins--------------------------------------------

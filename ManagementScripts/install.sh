@@ -115,43 +115,43 @@ function configure_crontab {
 set_proxy
 echo "Adicionar repositório do QGIS?"; read addqgisrepository
 addqgisrepository="${addqgisrepository:=s}"
-if [[ "addqgisrepository" == [sS] ]]; then
+if [[ $addqgisrepository == [sS] ]]; then
 	add_qgis_repository
 fi
 
 echo "Instalar pacotes?"; read instalarpacotes
 instalarpacotes="${instalarpacotes:=s}"
-if [[ "instalarpacotes" == [sS] ]]; then
+if [[ $instalarpacotes == [sS] ]]; then
 	install_packages
 fi
 
 echo "Configurar Apache?"; read configurarapache
 configurarapache="${configurarapache:=s}"
-if [[ "configurarapache" == [sS] ]]; then
+if [[ $configurarapache == [sS] ]]; then
 	configure_apache
 fi
 
 echo "Configurar PostgresSQL?"; read configurarpostgres
 configurarpostgres="${configurarpostgres:=s}"
-if [[ "configurarpostgres" == [sS] ]]; then
+if [[ $configurarpostgres == [sS] ]]; then
 	configure_postgresql
 fi
 
 echo "Atualizatr plugins?"; read atualizarplugins
 atualizarplugins="${atualizarplugins:=s}"
-if [[ "atualizarplugins" == [sS] ]]; then
+if [[ $atualizarplugins == [sS] ]]; then
 	update_plugins
 fi
 
 echo "Atualizar DSGManagementTools?"; read atualizardsgmanagementtools
 atualizardsgmanagementtools="${atualizardsgmanagementtools:=s}"
-if [[ "atualizardsgmanagementtools" == [sS] ]]; then
+if [[ $atualizardsgmanagementtools == [sS] ]]; then
 	update_dsgmanagementtools
 fi
 
 echo "Configurar Crontab?"; read configurarcrontab
 configurarcrontab="${configurarcrontab:=s}"
-if [[ "configurarcrontab" == [sS] ]]; then
+if [[ $configurarcrontab == [sS] ]]; then
 	configurarcrontab
 fi
 

@@ -116,7 +116,7 @@ set_proxy
 echo "Adicionar repositório do QGIS?"; read addqgisrepository
 addqgisrepository="${addqgisrepository:=s}"
 if [[ "addqgisrepository" == [sS] ]]; then
-	add_qadd_qgis_repository
+	add_qgis_repository
 fi
 
 echo "Instalar pacotes?"; read instalarpacotes

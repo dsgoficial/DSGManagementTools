@@ -44,8 +44,8 @@ function configure_postgresql {
 	export PGPASSWORD=postgres
 	postgresqlfolder=$(psql -c 'show config_file' -U postgres -h localhost -p 5432 |grep postgresql.conf)
 	pghbafolder=$(psql -c 'show hba_file' -U postgres -h localhost -p 5432 |grep pg_hba.conf)
-	sudo sed -i "s/listen_addresses = 'localhost'/listen_addresses = '\*'/g" $postgpostgresqlfolder
-	sudo sed -i "s/max_connections = 100/max_connections = 1000/g" $postgpostgresqlfolder
+	sudo sed -i "s/listen_addresses = 'localhost'/listen_addresses = '\*'/g" $postgresqlfolder
+	sudo sed -i "s/max_connections = 100/max_connections = 1000/g" $postgresqlfolder
 	sudo sed -i "s:127.0.0.1/32:0.0.0.0/0:g" $pgpghbafolder
 	#sudo printf "\n" >> ~/hba.conf
 	#sudo echo "host	all		all		0.0.0.0/0		md5" >> $pgpghbafolder

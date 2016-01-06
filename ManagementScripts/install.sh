@@ -79,7 +79,7 @@ function update_plugins {
 	
 #moving new plugins versions
 	sudo mv ~/$dsgtoolsfolder ~/.qgis2/python/plugins/DsgTools
-	sudo mv ~/$dsgmanagementtoolsfolder ~/.qgis2/python/plugins/DsgTools
+	sudo mv ~/$dsgmanagementtoolsfolder ~/.qgis2/python/plugins/DSGManagementTools
 	
 #removing unnecessary files
 	rm -rf ~/lastestdsgtools.html

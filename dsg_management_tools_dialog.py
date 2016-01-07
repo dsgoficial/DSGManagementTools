@@ -23,6 +23,9 @@
 
 import os
 
+#QGIS Imports
+from qgis.core import QgsCredentials
+
 from PyQt4 import QtGui, uic, QtCore
 from PyQt4.QtCore import pyqtSlot, Qt, QSettings
 from PyQt4.QtGui import QTreeWidgetItem, QMessageBox
@@ -70,7 +73,18 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         settings.endGroup()
         
         self.utils = Utils(self.ipLineEdit.text())       
-        
+    
+    def setCredentials(self, db, conInfo, user):
+        (success, user, password) = QgsCredentials.instance().get(conInfo, user, None)
+        if not success:
+            return
+        else:
+            db.setPassword(password)
+            if not db.open():
+                self.setCredentials(db, conInfo, user)
+            else:
+                QgsCredentials.instance().put(conInfo, user, password)
+                                    
     def populatePostGISConnectionsCombo(self):
         """
         Populate all the combo boxes with PostGIS connections
@@ -107,7 +121,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         clusternames = []
 
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(connectionParameters)
-        if conndb and connhost and connport and connuser and connpass:
+        if conndb and connhost and connport and connuser:
             db = self.getConnection(conndb, connhost, connport, connuser, connpass)
 
             sql = 'select schema_name from information_schema.schemata'
@@ -116,6 +130,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
                 schema = str(query.value(0))
                 if schema[0] == '_':
                     clusternames.append(schema)
+        else:
+            QMessageBox.warning(self, self.tr("Warning!"), self.tr('It is not possible to get all server parameters. Please, use DsgTools to edit the server.'))
                     
         return clusternames
 
@@ -125,6 +141,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         Populate the clusters tree widget
         """
         self.treeWidget.clear()
+        
+        if index == 0:
+            return
+        
         clusternames = self.queryClusterNames(self.serverCombo_3.currentText())
         for clustername in clusternames:
             self.insertClusterItem(self.treeWidget, clustername)
@@ -135,6 +155,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         Populate the clusters tree widget
         """
         self.treeWidget_2.clear()
+
+        if index == 0:
+            return
+        
         clusternames = self.queryClusterNames(self.serverCombo_4.currentText())
         for clustername in clusternames:
             self.insertClusterItem(self.treeWidget_2, clustername)
@@ -151,11 +175,15 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         db.setHostName(connhost)
         db.setPort(int(connport))
         db.setUserName(connuser)
-        db.setPassword(connpass)
-        
+
+        if not connpass or connpass == '':
+            conInfo = 'host='+connhost+' port='+connport+' dbname='+conndb
+            self.setCredentials(db, conInfo, connuser)
+        else:
+            db.setPassword(connpass)
+
         if not db.open():
-            print db.lastError().text()
-            return None
+            QMessageBox.critical(self, self.tr("Critical!"), self.tr('Database connection problem: \n') + db.lastError().text())
             
         return db
             
@@ -188,6 +216,15 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         masterdb = self.clientCombo.currentText()
         self.clusterEdit.setText(masterdb+separador+slavedb)
         
+    def checkPasswordSupply(self, db, host, port, user, password):
+        if not password or password == '':
+            conInfo = 'host='+host+' port='+port+' dbname='+db
+            (success, user, password) = QgsCredentials.instance().get(conInfo, user, None)
+            if not success:
+                QMessageBox.warning(self, self.tr('Warning!'), self.tr('Password not supplied. Nothing can be done!'))
+                return False
+        return True
+        
     @pyqtSlot(bool)
     def on_createClusterButton_clicked(self):
         """
@@ -200,8 +237,13 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
             return
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())
+        if not self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass):
+            return
+
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())
-        
+        if not self.checkPasswordSupply(masterdb, masterhost, masterport, masteruser, masterpass):
+            return
+
         req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
         ret = ret.decode(encoding='UTF-8')
@@ -221,7 +263,12 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         cluster = masterdb+separador+slavedb
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_2.currentText())
+        if not self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass):
+            return
+
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo_2.currentText())
+        if not self.checkPasswordSupply(masterdb, masterhost, masterport, masteruser, masterpass):
+            return
         
         req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster)
         (ret, success) = self.utils.run(req)
@@ -281,6 +328,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
 
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)
+        if not self.checkPasswordSupply(conndb, connhost, connport, connuser, connpass):
+            return
 
         #Gets the connection
         db = self.getConnection(conndb, connhost, connport, connuser, connpass)
@@ -299,6 +348,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         split = cluster.split(separador)
         slave = split[1]
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(slave)
+        if not self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass):
+            return
         
         req = self.utils.makeKillRequest('stopreplication.py', cluster, slavehost)
         (ret, success) = self.utils.run(req)
@@ -333,4 +384,3 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
                 item.setExpanded(True)
                 item.setText(0,text)
                 children.append(text)
-            

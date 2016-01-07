@@ -137,13 +137,13 @@ if [[ $configurarpostgres == [sS] ]]; then
 	configure_postgresql
 fi
 
-echo "Atualizatr plugins? (s/n)"; read atualizarplugins
+echo "Atualizar plugins? (s/n)"; read atualizarplugins
 atualizarplugins="${atualizarplugins:=s}"
 if [[ $atualizarplugins == [sS] ]]; then
 	update_plugins
 fi
 
-echo "Atualizar DSGManagementTools? (s/n)"; read atualizardsgmanagementtools
+echo "Atualizar scripts do DSGManagementTools? (s/n)"; read atualizardsgmanagementtools
 atualizardsgmanagementtools="${atualizardsgmanagementtools:=s}"
 if [[ $atualizardsgmanagementtools == [sS] ]]; then
 	update_dsgmanagementtools

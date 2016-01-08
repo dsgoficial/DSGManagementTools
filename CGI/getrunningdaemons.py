@@ -78,7 +78,7 @@ def makeResponse(lines):
         
         success, ev_seqno, ev_timestamp = checkSync(line)
         if not success:
-            return ''
+            continue
         if ev_seqno and ev_timestamp:
             response += ' (Último Sincronismo em: '+ev_timestamp+')'
         else:

@@ -28,12 +28,17 @@ def checkSync(line):
         conn = psycopg2.connect(database=dbname, user=dbuser, password=dbpass, port=dbport, host=dbhost)
     except psycopg2.Error as e:
         msg = 'Erro durante a conexão com a máquina (IP:%s | Banco:%s | Cluster: %s).\n Descrição: %s' % (dbhost, dbname, cluster, e.pgerror)
-        message(msg)
-        return False, None, None
+        return False, msg, None
     
     cur = conn.cursor()
     sql = 'SELECT ev_seqno, to_char(ev_timestamp, \'YYYY-MM-DD  HH24:MI:SS\') FROM _'+cluster+'.sl_event WHERE ev_type = \'SYNC\' ORDER BY ev_seqno DESC LIMIT 1'
-    cur.execute(sql)
+
+    try:
+        cur.execute(sql)
+    except psycopg2.Error as e:
+        msg = 'Erro durante a consulta (IP:%s | Banco:%s | Cluster: %s).\n Descrição: %s' % (dbhost, dbname, cluster, e.pgerror)
+        return False, msg, None
+
     rows = cur.fetchall()
     ev_seqno = None
     ev_timestamp = None
@@ -78,11 +83,13 @@ def makeResponse(lines):
         
         success, ev_seqno, ev_timestamp = checkSync(line)
         if not success:
-            continue
-        if ev_seqno and ev_timestamp:
-            response += ' (Último Sincronismo em: '+ev_timestamp+')'
+            # in this case ev_seqno is a error message
+            response += '\n Porém a o seguinte problema:\n ' +ev_seqno
         else:
-            response += ' (Cópia em andamento...)'
+            if ev_seqno and ev_timestamp:
+                response += ' (Último Sincronismo em: '+ev_timestamp+')'
+            else:
+                response += ' (Cópia em andamento...)'
         
         if i != len(lines)-1:
             response += '*'

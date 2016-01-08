@@ -222,8 +222,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
             (success, user, password) = QgsCredentials.instance().get(conInfo, user, None)
             if not success:
                 QMessageBox.warning(self, self.tr('Warning!'), self.tr('Password not supplied. Nothing can be done!'))
-                return False
-        return True
+                return False, None
+        return True, password
         
     @pyqtSlot(bool)
     def on_createClusterButton_clicked(self):
@@ -237,11 +237,13 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
             return
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo.currentText())
-        if not self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass):
+        supplied, slavepass = self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass)
+        if not supplied:
             return
 
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())
-        if not self.checkPasswordSupply(masterdb, masterhost, masterport, masteruser, masterpass):
+        supplied, masterpass = self.checkPasswordSupply(masterdb, masterhost, masterport, masteruser, masterpass)
+        if not supplied:
             return
 
         req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster)
@@ -263,11 +265,13 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         cluster = masterdb+separador+slavedb
         
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(self.serverCombo_2.currentText())
-        if not self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass):
+        supplied, slavepass = self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass)
+        if not supplied:
             return
 
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo_2.currentText())
-        if not self.checkPasswordSupply(masterdb, masterhost, masterport, masteruser, masterpass):
+        supplied, masterpass = self.checkPasswordSupply(masterdb, masterhost, masterport, masteruser, masterpass)
+        if not supplied:
             return
         
         req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster)
@@ -328,7 +332,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         """
 
         (conndb, connhost, connport, connuser, connpass) = self.utils.getPostGISConnectionParameters(conn)
-        if not self.checkPasswordSupply(conndb, connhost, connport, connuser, connpass):
+        supplied, connpass = self.checkPasswordSupply(conndb, connhost, connport, connuser, connpass)
+        if not supplied:
             return
 
         #Gets the connection
@@ -348,7 +353,8 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         split = cluster.split(separador)
         slave = split[1]
         (slavedb, slavehost, slaveport, slaveuser, slavepass) = self.utils.getPostGISConnectionParameters(slave)
-        if not self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass):
+        supplied, slavepass = self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass)
+        if not supplied:
             return
         
         req = self.utils.makeKillRequest('stopreplication.py', cluster, slavehost)

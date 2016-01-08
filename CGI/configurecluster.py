@@ -52,7 +52,7 @@ def updatePostgresUsers():
     try:
         conn = psycopg2.connect(database='postgres', user=slaveuser, password=slavepass, port=slaveport, host=slavehost)
     except psycopg2.Error as e:
-        msg = 'Erro durante a conexão com a máquina escrava (IP:%s).\n Descrição: %s' % (slavehost, e.pgerror)
+        msg = 'Erro durante a conexão com a máquina (IP:%s | Banco:%s | Cluster: %s).\n Descrição: %s' % (dbhost, dbname, cluster, e.pgerror)
         message(msg)
         return False
         
@@ -73,7 +73,7 @@ def updatePostgresUsers():
     try:
         conn = psycopg2.connect(database="postgres", user=masteruser, password=masterpass, port=masterport, host=masterhost)
     except psycopg2.Error as e:
-        msg = 'Erro durante a conexão com a máquina mestre (IP:%s).\n Descrição: %s' % (masterhost, e.pgerror)
+        msg = 'Erro durante a conexão com a máquina (IP:%s | Banco:%s | Cluster: %s).\n Descrição: %s' % (dbhost, dbname, cluster, e.pgerror)
         message(msg)
         return False
     

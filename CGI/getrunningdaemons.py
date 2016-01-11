@@ -84,7 +84,7 @@ def makeResponse(lines):
         success, ev_seqno, ev_timestamp = checkSync(line)
         if not success:
             # in this case ev_seqno is a error message
-            response += '\n Porém a o seguinte problema:\n ' +ev_seqno
+            response += '\n Porém há o seguinte problema:\n ' +ev_seqno
         else:
             if ev_seqno and ev_timestamp:
                 response += ' (Último Sincronismo em: '+ev_timestamp+')'

@@ -122,12 +122,12 @@ def updateScript(name, masterdb, slavedb, masterhost, slavehost, masterport, sla
     script.write(newData)
     script.close()
     
-def runProcess(cmd_list):
-    for cmd in cmd_list:
-        args = cmd.split()
-        p = subprocess.Popen(args, stdout=subprocess.PIPE)
-        out, err = p.communicate()
-        print out, err
+def runProcess(cmd):
+    args = cmd.split()
+    p = subprocess.Popen(args, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    rc = p.returncode
+    return rc, out, err
             
 def runCall(cmd):
     subprocess.call(cmd, shell=True)
@@ -145,9 +145,16 @@ if updatePostgresUsers():
     updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, clustername)
      
     # Configuring slony and subscribing
-    cmd_list = []
-    cmd_list.append('sh slony_temp.sh')
-    runProcess(cmd_list)
-    
-    msg = 'Cluster %s configurado com sucesso!' % clustername
-    message(msg)
+    cmd = 'sh slony_temp.sh'
+    rc, out, err = runProcess(cmd)
+    if rc == 0:        
+        msg = 'Cluster %s configurado com sucesso!' % clustername
+        message(msg)
+    else:
+        msg = 'Problema na criação do Cluster %s!' % clustername
+        if out:
+            msg += '\n Saída: %s' % str(out)
+        if err:
+            msg += '\n Erro: %s' % str(err)            
+        message(msg)
+        

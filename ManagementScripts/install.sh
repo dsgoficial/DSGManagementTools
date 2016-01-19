@@ -148,7 +148,7 @@ alterarsenha="${alterarsenha:=s}"
 if [[ $alterarsenha == [sS] ]]; then
 	echo "Entre com o password atual: "; read PASSWORD
 	echo "Entre com o novo password: "; read NEWPASSWORD
-		alter_postgres_password $PASSWORD $NEWPASSWORD
+	alter_postgres_password $PASSWORD $NEWPASSWORD
 fi
 
 echo "Atualizar plugins? (s/n)"; read atualizarplugins

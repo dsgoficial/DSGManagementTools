@@ -40,8 +40,8 @@ function configure_apache {
 	sudo /etc/init.d/apache2 restart
 }
 	
-function configure_postgresql {
-	export PGPASSWORD=postgres
+function configure_postgresql() {
+	export PGPASSWORD=$1
 	postgresqlfolder=$(psql -c 'show config_file' -U postgres -h localhost -p 5432 |grep postgresql.conf)
 	pghbafolder=$(psql -c 'show hba_file' -U postgres -h localhost -p 5432 |grep pg_hba.conf)
 	sudo sed -i "s/listen_addresses = 'localhost'/listen_addresses = '\*'/g" $postgresqlfolder
@@ -50,6 +50,11 @@ function configure_postgresql {
 	#sudo printf "\n" >> ~/hba.conf
 	#sudo echo "host	all		all		0.0.0.0/0		md5" >> $pgpghbafolder
 	sudo /etc/init.d/postgresql restart
+}
+
+function alter_postgres_password() {
+	export PGPASSWORD=$1
+	psql -c "ALTER USER postgres WITH PASSWORD '$2'" -U postgres -h localhost -p 5432
 }
 
 function update_plugins {	
@@ -134,7 +139,16 @@ fi
 echo "Configurar PostgresSQL? (s/n)"; read configurarpostgres
 configurarpostgres="${configurarpostgres:=s}"
 if [[ $configurarpostgres == [sS] ]]; then
-	configure_postgresql
+	echo "Entre com o password: "; read PASSWORD
+	configure_postgresql $PASSWORD
+fi
+
+echo "Alterar senha do usuário Postgres? (s/n)"; read alterarsenha
+alterarsenha="${alterarsenha:=s}"
+if [[ $alterarsenha == [sS] ]]; then
+	echo "Entre com o password atual: "; read PASSWORD
+	echo "Entre com o novo password: "; read NEWPASSWORD
+		alter_postgres_password $PASSWORD $NEWPASSWORD
 fi
 
 echo "Atualizar plugins? (s/n)"; read atualizarplugins

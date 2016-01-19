@@ -1,10 +1,10 @@
 <plugins>
-<pyqgis_plugin name="DsgManagementTools" version="1.1.5" plugin_id="1">
+<pyqgis_plugin name="DsgManagementTools" version="1.2" plugin_id="1">
 <description>Tools to manage DSG's cartographic production.></description>
 <about>
 DSGManagementTools with the followinf features -Replication of PostGIS databases created with the DsgTools plugin.
 </about>
-<version>1.1.5</version>
+<version>1.2</version>
 <qgis_minimum_version>2.6</qgis_minimum_version>
 <qgis_maximum_version>2.99</qgis_maximum_version>
 <homepage>https://github.com/phborba/DSGManagementTools></homepage>

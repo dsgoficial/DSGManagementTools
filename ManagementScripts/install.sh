@@ -32,9 +32,7 @@ function add_qgis_repository {
 function install_packages {
 #installing packages
 	$SUDO apt-get install synaptic qgis saga python-saga otb-bin python-otb otb-bin-qt grass qgis-plugin-grass postgresql postgis slony1-2-bin postgresql-9.3-slony1-2 pgadmin3 apache2 libapache2-mod-python python-qt4-sql libqt4-sql-psql libqt4-sql-sqlite
-	sudo mkdir ~/.qgis2	
-	sudo mkdir ~/.qgis2/python	
-	sudo mkdir ~/.qgis2/python/plugins	
+	sudo mkdir -p ~/.qgis2/python/plugins	
 	sudo chmod 777 -R ~/.qgis2
 }
 

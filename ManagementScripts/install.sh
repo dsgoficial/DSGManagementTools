@@ -32,7 +32,8 @@ function add_qgis_repository {
 function install_packages {
 #installing packages
 	$SUDO apt-get install synaptic qgis saga python-saga otb-bin python-otb otb-bin-qt grass qgis-plugin-grass postgresql postgis slony1-2-bin postgresql-9.3-slony1-2 pgadmin3 apache2 libapache2-mod-python python-qt4-sql libqt4-sql-psql libqt4-sql-sqlite
-	mkdir ~/.qgis2/python/plugins	
+	sudo mkdir ~/.qgis2/python/plugins	
+	sudo chmod 777 -R ~/.qgis2/python/plugins
 }
 
 function configure_apache { 
@@ -67,36 +68,34 @@ function update_plugins {
 	$WGET https://github.com/phborba/DSGManagementTools/releases/latest -O ~/lastestdsgmanagementtools.html
 	
 #getting latest tags urls
-	dsgtoolsurl=$(grep -r "/lcoandrade/DsgTools/archive/" ~/lastestdsgtools.html | grep ".zip" | awk -F' ' '{print $2}' | awk -F'=' '{print $2}' | awk -F'"' '{print $2}')
-	dsgmanagementtoolsurl=$(grep -r "/phborba/DSGManagementTools/archive/" ~/lastestdsgmanagementtools.html | grep ".zip" | awk -F' ' '{print $2}' | awk -F'=' '{print $2}' | awk -F'"' '{print $2}')
+	dsgtoolsurl=$(sudo grep -r "/lcoandrade/DsgTools/archive/" ~/lastestdsgtools.html | grep ".zip" | awk -F' ' '{print $2}' | awk -F'=' '{print $2}' | awk -F'"' '{print $2}')
+	dsgmanagementtoolsurl=$(sudo grep -r "/phborba/DSGManagementTools/archive/" ~/lastestdsgmanagementtools.html | grep ".zip" | awk -F' ' '{print $2}' | awk -F'=' '{print $2}' | awk -F'"' '{print $2}')
 	
 #downloading latest tags
 	$WGET https://github.com/$dsgtoolsurl -O ~/dsgtools.zip
 	$WGET https://github.com/$dsgmanagementtoolsurl -O ~/dsgmanagementtools.zip
 	
 #getting folder names
-	dsgtoolsfolder=$(zipinfo -1 ~/dsgtools.zip | head -1 |awk -F'/' '{print $1}')
-	dsgmanagementtoolsfolder=$(zipinfo -1 ~/dsgmanagementtools.zip | head -1 |awk -F'/' '{print $1}')
+	dsgtoolsfolder=$(sudo zipinfo -1 ~/dsgtools.zip | head -1 |awk -F'/' '{print $1}')
+	dsgmanagementtoolsfolder=$(sudo zipinfo -1 ~/dsgmanagementtools.zip | head -1 |awk -F'/' '{print $1}')
 	
 #deleting old plugins
 	sudo rm -rf ~/.qgis2/python/plugins/DsgTools
 	sudo rm -rf ~/.qgis2/python/plugins/DSGManagementTools
 	
 #unzipping plugins
-	unzip ~/dsgtools.zip -d ~/
-	unzip ~/dsgmanagementtools.zip -d ~/
+	sudo unzip ~/dsgtools.zip -d ~/
+	sudo unzip ~/dsgmanagementtools.zip -d ~/
 	
 #moving new plugins versions
 	sudo mv ~/$dsgtoolsfolder ~/.qgis2/python/plugins/DsgTools
 	sudo mv ~/$dsgmanagementtoolsfolder ~/.qgis2/python/plugins/DSGManagementTools
 	
 #removing unnecessary files
-	rm -rf ~/lastestdsgtools.html
-	rm -rf ~/lastestdsgmanagementtools.html
-	rm -rf ~/dsgtools.zip
-	rm -rf ~/dsgmanagementtools.zip
-	
-	sudo chmod 777 -R ~/.qgis2/python/plugins
+	sudo rm -rf ~/lastestdsgtools.html
+	sudo rm -rf ~/lastestdsgmanagementtools.html
+	sudo rm -rf ~/dsgtools.zip
+	sudo rm -rf ~/dsgmanagementtools.zip	
 }
 
 function update_dsgmanagementtools {

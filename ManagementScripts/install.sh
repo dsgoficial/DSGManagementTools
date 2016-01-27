@@ -32,6 +32,7 @@ function add_qgis_repository {
 function install_packages {
 #installing packages
 	$SUDO apt-get install synaptic qgis saga python-saga otb-bin python-otb otb-bin-qt grass qgis-plugin-grass postgresql postgis slony1-2-bin postgresql-9.3-slony1-2 pgadmin3 apache2 libapache2-mod-python python-qt4-sql libqt4-sql-psql libqt4-sql-sqlite
+	mkdir ~/.qgis2/python/plugins	
 }
 
 function configure_apache { 
@@ -41,6 +42,9 @@ function configure_apache {
 }
 	
 function configure_postgresql() {
+#Postgres user first password definition
+	sudo -u postgres psql postgres -c "ALTER USER postgres WITH PASSWORD '$1'"
+#configuring Postgresql
 	export PGPASSWORD=$1
 	postgresqlfolder=$(psql -c 'show config_file' -U postgres -h localhost -p 5432 |grep postgresql.conf)
 	pghbafolder=$(psql -c 'show hba_file' -U postgres -h localhost -p 5432 |grep pg_hba.conf)
@@ -111,6 +115,7 @@ function update_dsgmanagementtools {
 }
 
 function configure_crontab {
+#editing the crontab
 	sudo crontab -u www-data -l > mycron
 	echo "@reboot /usr/lib/cgi-bin/dsg_slon.sh" > mycron
 	sudo crontab -u www-data mycron

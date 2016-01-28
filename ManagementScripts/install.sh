@@ -6,11 +6,17 @@ function set_proxy {
 	if [ "$USEPROXY" == "s" ]; then
 		echo "Entre com o endereço do proxy: "; read PROXYHOST
 		echo "Entre com a porta do proxy: "; read PROXYPORT
-		echo "Entre com o usuário do proxy: "; read PROXYUSER
-		echo "Entre com o password do proxy: "; read PROXYPASS
-	  
-		export http_proxy="http://$PROXYUSER:$PROXYPASS@$PROXYHOST:$PROXYPORT"
-		export https_proxy="http://$PROXYUSER:$PROXYPASS@$PROXYHOST:$PROXYPORT"
+		echo "O proxy necessita de usuário e senha? (s/n)"; read USERNEEDED
+		USERNEEDED="${USERNEEDED:=s}"
+		if [[ $USERNEEDED == [sS] ]]; then
+			echo "Entre com o usuário do proxy: "; read PROXYUSER
+			echo "Entre com o password do proxy: "; read PROXYPASS
+			export http_proxy="http://$PROXYUSER:$PROXYPASS@$PROXYHOST:$PROXYPORT"
+			export https_proxy="http://$PROXYUSER:$PROXYPASS@$PROXYHOST:$PROXYPORT"
+		else
+			export http_proxy="http://$PROXYHOST:$PROXYPORT"
+			export https_proxy="http://$PROXYHOST:$PROXYPORT"						
+		fi
 	  
 		SUDO="sudo -E"
 		WGET="wget -E"

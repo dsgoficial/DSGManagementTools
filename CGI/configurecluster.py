@@ -152,8 +152,6 @@ if updatePostgresUsers():
         message('Problema na criação do cluster: Versão de bancos incompatível com o plugin (Use somente EDGV 2.1.3 ou FTer_2a_Ed)')
         
     slony_temp = updateScript(slony, masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, clustername)
-    message(slony)
-    message(slony_temp)
      
     # Configuring slony and subscribing
     cmd = 'sh {}'.format(slony_temp)

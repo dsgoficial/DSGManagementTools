@@ -241,7 +241,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if not supplied:
             return
         
-        #cheking slave's database version
+        #checking slave's database version
         db = self.getConnection(slavedb, slavehost, slaveport, slaveuser, slavepass)
         slaveversion = self.getDatabaseVersion(db)
 
@@ -250,7 +250,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if not supplied:
             return
 
-        #cheking master's database version
+        #checking master's database version
         db = self.getConnection(masterdb, masterhost, masterport, masteruser, masterpass)
         masterversion = self.getDatabaseVersion(db)
         
@@ -281,7 +281,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if not supplied:
             return
 
-        #cheking slave's database version
+        #checking slave's database version
         db = self.getConnection(slavedb, slavehost, slaveport, slaveuser, slavepass)
         slaveversion = self.getDatabaseVersion(db)
 
@@ -290,7 +290,7 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if not supplied:
             return
         
-        #cheking master's database version
+        #checking master's database version
         db = self.getConnection(masterdb, masterhost, masterport, masteruser, masterpass)
         masterversion = self.getDatabaseVersion(db)
         
@@ -416,9 +416,10 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
                 children.append(text)
 
     def getDatabaseVersion(self, db):
+        version = '-1'
         if not db.open():
-            return '-1'
-        sqlVersion = 'SELECT edgvversion FROM public_db_metadata LIMIT 1'
+            return version
+        sqlVersion = 'SELECT edgvversion FROM db_metadata LIMIT 1'
         queryVersion = QSqlQuery(sqlVersion, db)
         while queryVersion.next():
             version = queryVersion.value(0)

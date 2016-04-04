@@ -240,13 +240,25 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         supplied, slavepass = self.checkPasswordSupply(slavedb, slavehost, slaveport, slaveuser, slavepass)
         if not supplied:
             return
+        
+        #cheking slave's database version
+        db = self.getConnection(slavedb, slavehost, slaveport, slaveuser, slavepass)
+        slaveversion = self.getDatabaseVersion(db)
 
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo.currentText())
         supplied, masterpass = self.checkPasswordSupply(masterdb, masterhost, masterport, masteruser, masterpass)
         if not supplied:
             return
 
-        req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster)
+        #cheking master's database version
+        db = self.getConnection(masterdb, masterhost, masterport, masteruser, masterpass)
+        masterversion = self.getDatabaseVersion(db)
+        
+        if masterversion != slaveversion:
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Slave and Master databases have different versions!'))
+            return
+
+        req = self.utils.makeRequest('configurecluster.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster, masterversion)
         (ret, success) = self.utils.run(req)
         ret = ret.decode(encoding='UTF-8')
         if success:
@@ -269,12 +281,24 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
         if not supplied:
             return
 
+        #cheking slave's database version
+        db = self.getConnection(slavedb, slavehost, slaveport, slaveuser, slavepass)
+        slaveversion = self.getDatabaseVersion(db)
+
         (masterdb, masterhost, masterport, masteruser, masterpass) = self.utils.getPostGISConnectionParameters(self.clientCombo_2.currentText())
         supplied, masterpass = self.checkPasswordSupply(masterdb, masterhost, masterport, masteruser, masterpass)
         if not supplied:
             return
         
-        req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster)
+        #cheking master's database version
+        db = self.getConnection(masterdb, masterhost, masterport, masteruser, masterpass)
+        masterversion = self.getDatabaseVersion(db)
+        
+        if masterversion != slaveversion:
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('Slave and Master databases have different versions!'))
+            return
+
+        req = self.utils.makeRequest('startreplication.py', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster, masterversion)
         (ret, success) = self.utils.run(req)
         ret = ret.decode(encoding='UTF-8')
         if success:
@@ -390,3 +414,12 @@ class DsgManagementToolsDialog(QtGui.QDialog, FORM_CLASS):
                 item.setExpanded(True)
                 item.setText(0,text)
                 children.append(text)
+
+    def getDatabaseVersion(self, db):
+        if not db.open():
+            return '-1'
+        sqlVersion = 'SELECT edgvversion FROM public_db_metadata LIMIT 1'
+        queryVersion = QSqlQuery(sqlVersion, db)
+        while queryVersion.next():
+            version = queryVersion.value(0)
+        return version

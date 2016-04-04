@@ -24,6 +24,7 @@ masterpass = form.getvalue('MASTERPASS')
 slaveuser = form.getvalue('SLAVEUSER')
 slavepass = form.getvalue('SLAVEPASS')
 clustername = form.getvalue('CLUSTERNAME')
+dbversion = form.getvalue('DBVERSION')
 
 def updatePostgresUsers():
     sql = '''SELECT rolname, \'CREATE ROLE \' || rolname || \';\',
@@ -122,6 +123,8 @@ def updateScript(name, masterdb, slavedb, masterhost, slavehost, masterport, sla
     script.write(newData)
     script.close()
     
+    return newname
+    
 def runProcess(cmd):
     args = cmd.split()
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
@@ -141,11 +144,17 @@ def message(msg):
 #updating users
 if updatePostgresUsers():    
     # Updating scripts
-    updateScript('slony.sh', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, clustername)
-    updateScript('slony_subscribe.sh', masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, clustername)
+    if dbversion == '2.1.3':
+        slony = 'slony_213.sh'
+    elif dbversion == 'FTer_2a_Ed':
+        slony = 'slony_fter.sh'
+    else:
+        message('Problema na criação do cluster: Versão de bancos incompatível com o plugin (Use somente EDGV 2.1.3 ou FTer_2a_Ed)')
+        
+    slony_temp = updateScript(slony, masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, clustername)
      
     # Configuring slony and subscribing
-    cmd = 'sh slony_temp.sh'
+    cmd = 'sh {}'.format(slony_temp)
     rc, out, err = runProcess(cmd)
     if rc == 0:        
         msg = 'Cluster %s configurado com sucesso!' % clustername

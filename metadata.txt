@@ -10,12 +10,13 @@
 name=DsgManagementTools
 qgisMinimumVersion=2.6
 description=Tools to manage DSG's cartographic production
-version=1.2
+version=2.0
 author=Brazilian Army - Geographic Service Bureau
 email=suporte.dsgtools@dsg.eb.mil.br
 about=
 	DSGManagementTools with the followinf features
 	-Replication of PostGIS databases created with the DsgTools plugin
+	-Replication working for EDGV 2.1.3 and FTer_2a_Ed
 
 # End of mandatory metadata
 
@@ -31,6 +32,7 @@ about=
 	1.1.4- Update to work with server without stored password
 	1.1.5- Bug fix on servers without password
 	1.2- New way to report messages. Now critical information it's being passed to the user.
+	2.0- Replication working for EDGV 2.1.3 and FTer_2a_Ed
 
 # Tags are comma separated with spaces allowed
 tags=

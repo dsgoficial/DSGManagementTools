@@ -24,6 +24,7 @@ masterpass = form.getvalue('MASTERPASS')
 slaveuser = form.getvalue('SLAVEUSER')
 slavepass = form.getvalue('SLAVEPASS')
 clustername = form.getvalue('CLUSTERNAME')
+dbversion = form.getvalue('DBVERSION')
 
 def updateScript(name, masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster):
     script = open(name, 'r')

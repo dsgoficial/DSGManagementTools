@@ -85,7 +85,7 @@ class Utils:
         settings.endGroup()
         return (database, host, port, user, password)    
     
-    def makeRequest(self, script, masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster):
+    def makeRequest(self, script, masterdb, slavedb, masterhost, slavehost, masterport, slaveport, masteruser, masterpass, slaveuser, slavepass, cluster, dbversion):
         serverUrl = self.server+script
         # set proxy
         self.setUrllibProxy(serverUrl)        
@@ -100,7 +100,8 @@ class Utils:
                 'MASTERPASS':masterpass,
                 'SLAVEUSER':slaveuser,
                 'SLAVEPASS':slavepass,
-                'CLUSTERNAME':cluster}
+                'CLUSTERNAME':cluster,
+                'DBVERSION':dbversion}
         postFile = urllib.urlencode(data)
         req = urllib2.Request(url=serverUrl, data=postFile)
         return req

@@ -31,6 +31,7 @@ function set_proxy {
 
 function add_qgis_repository {
 #preparing QGIS repository
+	$SUDO echo "deb http://qgis.org/ubuntugis-ltr trusty main" | sudo tee -a /etc/apt/sources.list
 	$SUDO add-apt-repository ppa:ubuntugis/ubuntugis-unstable
 	$SUDO apt-get update
 }

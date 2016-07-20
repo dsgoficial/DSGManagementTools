@@ -31,10 +31,10 @@ function set_proxy {
 
 function add_qgis_repository {
 #preparing QGIS repository
-	if grep -q "ubuntugis-ltr" /etc/apt/sources.list; then
+	if grep -q "deb http://qgis.org/ubuntugis-ltr/ trusty main" /etc/apt/sources.list; then
 		echo "repositório QGIS LTR já adicionado"
 	else
-		$SUDO echo "deb http://qgis.org/ubuntugis-ltr trusty main" | sudo tee -a /etc/apt/sources.list
+		$SUDO echo "deb http://qgis.org/ubuntugis-ltr/ trusty main" | sudo tee -a /etc/apt/sources.list
 	fi
 	$SUDO add-apt-repository ppa:ubuntugis/ubuntugis-unstable
 	$SUDO apt-get update

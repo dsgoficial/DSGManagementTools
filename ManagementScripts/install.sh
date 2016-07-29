@@ -42,7 +42,7 @@ function add_qgis_repository {
 
 function install_packages {
 #removing previously installed packages
-	$SUDO apt-get remove qgis saga python-saga otb-bin python-otb otb-bin-qt grass qgis-plugin-grass
+	$SUDO apt-get remove qgis saga python-saga otb-bin python-otb otb-bin-qt grass qgis-plugin-grass libgdal1h
 #cleaning and updating apt-get
 	$SUDO apt-get update
 	$SUDO apt-get autoclean

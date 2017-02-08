@@ -10,7 +10,7 @@ function set_proxy {
 		USERNEEDED="${USERNEEDED:=s}"
 		if [[ $USERNEEDED == [sS] ]]; then
 			echo "Entre com o usuário do proxy: "; read PROXYUSER
-			echo "Entre com o password do proxy: "; read PROXYPASS
+			echo "Entre com o password do proxy: "; read -s PROXYPASS
 			export http_proxy="http://$PROXYUSER:$PROXYPASS@$PROXYHOST:$PROXYPORT"
 			export https_proxy="http://$PROXYUSER:$PROXYPASS@$PROXYHOST:$PROXYPORT"
 		else
